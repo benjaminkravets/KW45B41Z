@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chips chipVendor="NXP"
+       family="KW4x"
+       vendorURL="http://www.nxp.com"
+       chipURL="">
+   <chip name="KW45B41Z83xxxA"
+         displayName="KW45B41Z83xxxA"
+         xml_file="KW45B41Z83_internal.xml"
+         chipURL=""/>
+</chips>
