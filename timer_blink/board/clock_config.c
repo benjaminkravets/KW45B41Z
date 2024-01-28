@@ -25,6 +25,7 @@ processor: KW45B41Z83xxxA
 package_id: KW45B41Z83AFTA
 mcu_data: ksdk2_0
 processor_version: 15.0.0
+board: KW45B41Z-EVK
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
@@ -106,6 +107,7 @@ outputs:
 - {id: CPU_CLK.outFreq, value: 96 MHz}
 - {id: FIRC_CLK.outFreq, value: 96 MHz}
 - {id: FRO16K_CLK.outFreq, value: 16 kHz}
+- {id: MRCC.MRCC_LPIT0_CLK.outFreq, value: 96 MHz}
 - {id: RADIO_FRO192M_CLK.outFreq, value: 32 MHz}
 - {id: RADIO_FRO192M_FRODIV_CLK.outFreq, value: 16 MHz}
 - {id: ROSC_CLK.outFreq, value: 32.768 kHz}
@@ -116,13 +118,14 @@ outputs:
 - {id: SOSC_CLK.outFreq, value: 32 MHz}
 - {id: System_clock.outFreq, value: 96 MHz}
 settings:
-- {id: VDDCore, value: voltage_1v1}
+- {id: VDDCore, value: voltage_1v15}
 - {id: CCM32K.CCM32K_32K_SEL.sel, value: CCM32K.OSC_32K}
 - {id: CCM32K_FRO32K_CTRL_FRO_EN_CFG, value: Disabled}
 - {id: CCM32K_OSC32K_CTRL_CAP_SEL_EN_CFG, value: Enabled}
 - {id: CCM32K_OSC32K_CTRL_EXTAL_CAP_SEL_CFG, value: 8PF}
 - {id: CCM32K_OSC32K_CTRL_OSC_EN_CFG, value: Enabled}
 - {id: CCM32K_OSC32K_CTRL_XTAL_CAP_SEL_CFG, value: 8PF}
+- {id: MRCC.MRCC_LPIT0_SEL.sel, value: SCG.FIRC_CLK}
 - {id: SCG.DIVCORE.scale, value: '1', locked: true}
 - {id: SCG.DIVSLOW.scale, value: '4', locked: true}
 - {id: SCG.FIRC_TRIMDIV.scale, value: '32', locked: true}
@@ -195,7 +198,7 @@ void BOARD_BootClockRUN(void)
 
     if (coreFreq <= BOARD_BOOTCLOCKRUN_CORE_CLOCK) {
         /* Set the LDO_CORE VDD regulator level */
-        ldoOption.CoreLDOVoltage = kSPC_CoreLDO_NormalVoltage;
+        ldoOption.CoreLDOVoltage = kSPC_CoreLDO_SafeModeVoltage;
         ldoOption.CoreLDODriveStrength = kSPC_CoreLDO_NormalDriveStrength;
         (void)SPC_SetActiveModeCoreLDORegulatorConfig(SPC0, &ldoOption);
         /* Configure Flash to support different voltage level and frequency */
@@ -247,11 +250,15 @@ void BOARD_BootClockRUN(void)
         /* Specifies the operating voltage for the SRAM's read/write timing margin */
         SPC_SetSRAMOperateVoltage(SPC0, kSPC_SRAM_OperatVoltage1P1V);
         /* Set the LDO_CORE VDD regulator level */
-        ldoOption.CoreLDOVoltage = kSPC_CoreLDO_NormalVoltage;
+        ldoOption.CoreLDOVoltage = kSPC_CoreLDO_SafeModeVoltage;
         ldoOption.CoreLDODriveStrength = kSPC_CoreLDO_NormalDriveStrength;
         (void)SPC_SetActiveModeCoreLDORegulatorConfig(SPC0, &ldoOption);
     }
 
     /* Set SCG CLKOUT selection. */
     CLOCK_CONFIG_SetScgOutSel(kClockClkoutSelScgSlow);
+    /* Set MRCC LPIT0 selection */
+    CLOCK_SetIpSrc(kCLOCK_Lpit0, kCLOCK_IpSrcFro192M);
+    /* Set MRCC LPIT0 fraction divider */
+    CLOCK_SetIpSrcDiv(kCLOCK_Lpit0, kSCG_SysClkDivBy1);
 }
