@@ -22,6 +22,14 @@
 /* LPIT0_IRQn interrupt handler */
 void LPIT0_IRQHANDLER(void) {
   /*  Place your code here */
+  uint32_t flags;
+  flags = LPIT_GetStatusFlags(LPIT0_PERIPHERAL);
+  LPIT_ClearStatusFlags(LPIT0_PERIPHERAL, flags);
+  LPIT_GetStatusFlags(LPIT0_PERIPHERAL);
+
+
+  GPIO_PortToggle(GPIOA, 1u << 19U);
+
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */
   #if defined __CORTEX_M && (__CORTEX_M == 4U)
