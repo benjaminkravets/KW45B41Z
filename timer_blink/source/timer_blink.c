@@ -29,6 +29,7 @@ void LPIT0_IRQHANDLER(void) {
 
 
   GPIO_PortToggle(GPIOA, 1u << 19U);
+  GPIO_PortToggle(GPIOD, 1u << 1U);
 
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */
