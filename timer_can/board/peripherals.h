@@ -25,7 +25,7 @@ extern "C" {
 /* Definition of peripheral ID */
 #define CAN0_PERIPHERAL CAN0
 /* Definition of the clock source frequency */
-#define CAN0_CLOCK_SOURCE 96000000UL
+#define CAN0_CLOCK_SOURCE 16000000UL
 /* BOARD_InitPeripherals defines for LPIT0 */
 /* Definition of peripheral ID. */
 #define LPIT0_PERIPHERAL LPIT0

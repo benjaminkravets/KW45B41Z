@@ -109,7 +109,7 @@ instance:
       - clockSourceFreq: 'ClocksTool_DefaultInit'
       - wakeupSrc: 'kFLEXCAN_WakeupSrcUnfiltered'
       - flexibleDataRate: 'false'
-      - baudRate: '1000000'
+      - baudRate: '100000'
       - baudRateFD: '2000000'
       - enableBRS: 'false'
       - dataSize: 'kFLEXCAN_8BperMB'
@@ -210,12 +210,11 @@ instance:
           - byte: '0'
         - 7:
           - byte: '0'
-    - quick_selection: 'default'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const flexcan_config_t CAN0_config = {
   .wakeupSrc = kFLEXCAN_WakeupSrcUnfiltered,
-  .bitRate = 1000000UL,
+  .bitRate = 100000UL,
   .bitRateFD = 2000000UL,
   .maxMbNum = 16U,
   .enableLoopBack = false,
@@ -228,7 +227,7 @@ const flexcan_config_t CAN0_config = {
   .enablePretendedeNetworking = false,
   .enableTransceiverDelayMeasure = true,
   .timingConfig = {
-    .preDivider = 11,
+    .preDivider = 19,
     .propSeg = 0,
     .phaseSeg1 = 3,
     .phaseSeg2 = 2,
