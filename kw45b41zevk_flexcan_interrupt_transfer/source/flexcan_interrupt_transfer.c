@@ -230,7 +230,7 @@ int main(void)
 #else
     FLEXCAN_SetTxMbConfig(EXAMPLE_CAN, TX_MESSAGE_BUFFER_NUM, true);
 #endif
-
+    LOG_INFO("check 1\r\n");
     if ((node_type == 'A') || (node_type == 'a'))
     {
         LOG_INFO("Press any key to trigger one-shot transmission\r\n\r\n");
@@ -240,11 +240,13 @@ int main(void)
     {
         LOG_INFO("Start to Wait data from Node A\r\n\r\n");
     }
-
+    LOG_INFO("check 2\r\n");
     while (true)
     {
+        LOG_INFO("check 3\r\n");
         if ((node_type == 'A') || (node_type == 'a'))
         {
+            LOG_INFO("check 4\r\n");
             GETCHAR();
 
             frame.id     = FLEXCAN_ID_STD(txIdentifier);
@@ -258,10 +260,14 @@ int main(void)
             txXfer.mbIdx = (uint8_t)TX_MESSAGE_BUFFER_NUM;
 #if (defined(USE_CANFD) && USE_CANFD)
             txXfer.framefd = &frame;
+            LOG_INFO("check 5\r\n");
             (void)FLEXCAN_TransferFDSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
+            LOG_INFO("check 6\r\n");
 #else
             txXfer.frame = &frame;
+            LOG_INFO("check 7\r\n");
             (void)FLEXCAN_TransferSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
+            LOG_INFO("check 8\r\n");
 #endif
 
             while (!txComplete)
