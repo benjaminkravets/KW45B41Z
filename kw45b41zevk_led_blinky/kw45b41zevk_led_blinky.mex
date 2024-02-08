@@ -178,6 +178,7 @@
                   <setting id="CCM32K_OSC32K_CTRL_EXTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_OSC_EN_CFG" value="Enabled" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_XTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
+                  <setting id="MRCC.MRCC_CAN0_DIV.scale" value="1" locked="true"/>
                   <setting id="SCG.DIVCORE.scale" value="1" locked="true"/>
                   <setting id="SCG.DIVSLOW.scale" value="4" locked="true"/>
                   <setting id="SCG.FIRC_TRIMDIV.scale" value="32" locked="true"/>

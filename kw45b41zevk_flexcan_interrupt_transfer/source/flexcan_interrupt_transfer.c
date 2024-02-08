@@ -60,6 +60,8 @@ flexcan_frame_t frame;
 uint32_t txIdentifier;
 uint32_t rxIdentifier;
 
+uint32_t can_status_return;
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -108,7 +110,7 @@ int main(void)
     BOARD_InitDebugConsole();
 
     CLOCK_SetIpSrc(kCLOCK_Can0, kCLOCK_IpSrcSoscClk);
-    CLOCK_SetIpSrcDiv(kCLOCK_Can0, kSCG_SysClkDivBy1);
+    CLOCK_SetIpSrcDiv(kCLOCK_Can0, kSCG_SysClkDivBy4);
 
     LOG_INFO("********* FLEXCAN Interrupt EXAMPLE *********\r\n");
     LOG_INFO("    Message format: Standard (11 bit id)\r\n");
@@ -261,8 +263,14 @@ int main(void)
 #if (defined(USE_CANFD) && USE_CANFD)
             txXfer.framefd = &frame;
             LOG_INFO("check 5\r\n");
-            (void)FLEXCAN_TransferFDSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
-            LOG_INFO("check 6\r\n");
+            while(1){
+            	LOG_INFO("check 6\r\n");
+            	GETCHAR();
+            	can_status_return = FLEXCAN_TransferFDSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
+            	LOG_INFO("%i \r\n", can_status_return);
+            }
+
+            LOG_INFO("check 7\r\n");
 #else
             txXfer.frame = &frame;
             LOG_INFO("check 7\r\n");
