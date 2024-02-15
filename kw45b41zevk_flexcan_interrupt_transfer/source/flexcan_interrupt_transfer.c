@@ -263,6 +263,7 @@ int main(void)
 #if (defined(USE_CANFD) && USE_CANFD)
             txXfer.framefd = &frame;
             LOG_INFO("check 5\r\n");
+            LOG_INFO("%i \r\n", flexcanConfig.bitRate);
             while(1){
             	LOG_INFO("check 6\r\n");
             	GETCHAR();
