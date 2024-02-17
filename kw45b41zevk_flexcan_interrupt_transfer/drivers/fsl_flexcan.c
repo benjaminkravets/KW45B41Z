@@ -7,7 +7,8 @@
  */
 
 #include "fsl_flexcan.h"
-
+#include "fsl_debug_console.h"
+#define LOG_INFO (void)PRINTF
 /*
  * $Coverage Justification Reference$
  *
@@ -3507,6 +3508,7 @@ void FLEXCAN_TransferCreateHandle(CAN_Type *base,
  * retval kStatus_Fail           Write Tx Message Buffer failed.
  * retval kStatus_FLEXCAN_TxBusy Tx Message Buffer is in use.
  */
+
 status_t FLEXCAN_TransferSendNonBlocking(CAN_Type *base, flexcan_handle_t *handle, flexcan_mb_transfer_t *pMbXfer)
 {
     /* Assertion. */
@@ -3516,44 +3518,53 @@ status_t FLEXCAN_TransferSendNonBlocking(CAN_Type *base, flexcan_handle_t *handl
 #if !defined(NDEBUG)
     assert(!FLEXCAN_IsMbOccupied(base, pMbXfer->mbIdx));
 #endif
-
+    LOG_INFO("flexcan_transfer 1 \r\n");
     status_t status;
 
     /* Check if Message Buffer is idle. */
     if ((uint8_t)kFLEXCAN_StateIdle == handle->mbState[pMbXfer->mbIdx])
     {
+    	LOG_INFO("flexcan_transfer 2 \r\n");
         /* Distinguish transmit type. */
         if ((uint32_t)kFLEXCAN_FrameTypeRemote == pMbXfer->frame->type)
         {
+        	LOG_INFO("flexcan_transfer 3 \r\n");
             handle->mbState[pMbXfer->mbIdx] = (uint8_t)kFLEXCAN_StateTxRemote;
         }
         else
         {
+        	LOG_INFO("flexcan_transfer 4 \r\n");
             handle->mbState[pMbXfer->mbIdx] = (uint8_t)kFLEXCAN_StateTxData;
         }
 
         if (kStatus_Success ==
             FLEXCAN_WriteTxMb(base, pMbXfer->mbIdx, (const flexcan_frame_t *)(uintptr_t)pMbXfer->frame))
         {
+        	LOG_INFO("flexcan_transfer 5 \r\n");
             /* Enable Message Buffer Interrupt. */
 #if (defined(FSL_FEATURE_FLEXCAN_HAS_MORE_THAN_64_MB) && FSL_FEATURE_FLEXCAN_HAS_MORE_THAN_64_MB)
             if (pMbXfer->mbIdx >= 64U)
             {
+            	LOG_INFO("flexcan_transfer 6 \r\n");
                 FLEXCAN_EnableHigh64MbInterrupts(base, (uint64_t)1U << (pMbXfer->mbIdx - 64U));
             }
             else
             {
+            	LOG_INFO("flexcan_transfer 7 \r\n");
                 FLEXCAN_EnableMbInterrupts(base, (uint64_t)1U << pMbXfer->mbIdx);
             }
+            LOG_INFO("flexcan_transfer 8 \r\n");
 #elif (defined(FSL_FEATURE_FLEXCAN_HAS_EXTENDED_FLAG_REGISTER)) && (FSL_FEATURE_FLEXCAN_HAS_EXTENDED_FLAG_REGISTER > 0)
             FLEXCAN_EnableMbInterrupts(base, (uint64_t)1U << pMbXfer->mbIdx);
 #else
             FLEXCAN_EnableMbInterrupts(base, (uint32_t)1U << pMbXfer->mbIdx);
 #endif
+            LOG_INFO("flexcan_transfer 9 \r\n");
             status = kStatus_Success;
         }
         else
         {
+
             handle->mbState[pMbXfer->mbIdx] = (uint8_t)kFLEXCAN_StateIdle;
             status                          = kStatus_Fail;
         }

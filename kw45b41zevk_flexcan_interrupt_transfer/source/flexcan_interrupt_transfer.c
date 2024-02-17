@@ -15,7 +15,7 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define USE_CANFD             (1)
+#define USE_CANFD             (0)
 #define EXAMPLE_CAN           CAN0
 #define RX_MESSAGE_BUFFER_NUM (0)
 #define TX_MESSAGE_BUFFER_NUM (1)
@@ -155,6 +155,8 @@ int main(void)
      */
     FLEXCAN_GetDefaultConfig(&flexcanConfig);
 
+    flexcanConfig.bitRate = 500000U;
+
 #if defined(EXAMPLE_CAN_CLK_SOURCE)
     flexcanConfig.clkSrc = EXAMPLE_CAN_CLK_SOURCE;
 #endif
@@ -268,9 +270,18 @@ int main(void)
             	LOG_INFO("%i \r\n", can_status_return);
             } */
 #else
-            LOG_INFO("Regular called \r\n ");
+            LOG_INFO("Regular called\r\n ");
             txXfer.frame = &frame;
+            LOG_INFO("Bit rate: %i \r\n", flexcanConfig.bitRate);
             (void)FLEXCAN_TransferSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
+
+            while(1){
+            	LOG_INFO("Regular called \r\n");
+            	GETCHAR();
+            	uint32_t can_status_return = FLEXCAN_TransferSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
+            	LOG_INFO("%i \r\n", can_status_return);
+            }
+
 #endif
             LOG_INFO("I get here 1 \r\n");
             LOG_INFO("Len %i \r\n", frame.length);
@@ -278,7 +289,7 @@ int main(void)
             while (!txComplete)
             {
             };
-
+            LOG_INFO("I get here 2 \r\n");
             txComplete = false;
 
             /* Start receive data through Rx Message Buffer. */
