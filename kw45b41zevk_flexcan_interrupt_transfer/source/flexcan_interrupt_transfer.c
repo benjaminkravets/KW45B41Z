@@ -260,22 +260,25 @@ int main(void)
             LOG_INFO("FD called \r\n ");
             txXfer.framefd = &frame;
             (void)FLEXCAN_TransferFDSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
-
+            /*
             while(1){
             	LOG_INFO("Send \r\n");
             	GETCHAR();
             	uint32_t can_status_return = FLEXCAN_TransferFDSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
             	LOG_INFO("%i \r\n", can_status_return);
-            }
+            } */
 #else
             LOG_INFO("Regular called \r\n ");
             txXfer.frame = &frame;
             (void)FLEXCAN_TransferSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
 #endif
+            LOG_INFO("I get here 1 \r\n");
+            LOG_INFO("Len %i \r\n", frame.length);
 
             while (!txComplete)
             {
             };
+
             txComplete = false;
 
             /* Start receive data through Rx Message Buffer. */
@@ -287,7 +290,7 @@ int main(void)
             rxXfer.frame = &frame;
             (void)FLEXCAN_TransferReceiveNonBlocking(EXAMPLE_CAN, &flexcanHandle, &rxXfer);
 #endif
-
+            LOG_INFO("I get here 3 \r\n");
             /* Wait until Rx MB full. */
             while (!rxComplete)
             {
