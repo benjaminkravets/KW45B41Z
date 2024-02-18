@@ -68,6 +68,7 @@ uint32_t rxIdentifier;
  */
 static FLEXCAN_CALLBACK(flexcan_callback)
 {
+	LOG_INFO("Callback called \r\n");
     switch (status)
     {
         case kStatus_FLEXCAN_RxIdle:
@@ -132,11 +133,11 @@ int main(void)
     if ((node_type == 'A') || (node_type == 'a'))
     {
         txIdentifier = 0x321;
-        rxIdentifier = 0x123;
+        rxIdentifier = 0x446;
     }
     else
     {
-        txIdentifier = 0x123;
+        txIdentifier = 0x446;
         rxIdentifier = 0x321;
     }
 
@@ -323,10 +324,12 @@ int main(void)
              * application it seems that B received the frame that woke it up which
              * is not expected as stated in the reference manual, but actually the
              * output in the terminal B received is the same second frame N). */
+        	LOG_INFO("Receive checkpoint 1 \r\n ");
             if (wakenUp)
             {
                 LOG_INFO("B has been waken up!\r\n\r\n");
             }
+        	LOG_INFO("Receive checkpoint 2 \r\n ");
 
             /* Start receive data through Rx Message Buffer. */
             rxXfer.mbIdx = (uint8_t)RX_MESSAGE_BUFFER_NUM;
@@ -335,13 +338,18 @@ int main(void)
             (void)FLEXCAN_TransferFDReceiveNonBlocking(EXAMPLE_CAN, &flexcanHandle, &rxXfer);
 #else
             rxXfer.frame = &frame;
-            (void)FLEXCAN_TransferReceiveNonBlocking(EXAMPLE_CAN, &flexcanHandle, &rxXfer);
+            //(void)FLEXCAN_TransferReceiveNonBlocking(EXAMPLE_CAN, &flexcanHandle, &rxXfer);
+            (void)FLEXCAN_TransferReceiveBlocking(EXAMPLE_CAN, rxXfer.mbIdx, rxXfer.frame);
 #endif
+        	LOG_INFO("Receive checkpoint 3 \r\n ");
 
             /* Wait until Rx receive full. */
             while (!rxComplete)
             {
+
             };
+        	LOG_INFO("Receive checkpoint 4 \r\n ");
+
             rxComplete = false;
 
             LOG_INFO("Rx MB ID: 0x%3x, Rx MB data: 0x%x, Time stamp: %d\r\n", frame.id >> CAN_ID_STD_SHIFT,
