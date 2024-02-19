@@ -12,7 +12,6 @@
 #include "fsl_common.h"
 #include "fsl_flexcan.h"
 #include "fsl_clock.h"
-#include "fsl_lpit.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -25,20 +24,7 @@ extern "C" {
 /* Definition of peripheral ID */
 #define CAN0_PERIPHERAL CAN0
 /* Definition of the clock source frequency */
-#define CAN0_CLOCK_SOURCE 16000000UL
-/* BOARD_InitPeripherals defines for LPIT0 */
-/* Definition of peripheral ID. */
-#define LPIT0_PERIPHERAL LPIT0
-/* Definition of clock source frequency. */
-#define LPIT0_CLK_FREQ 96000000UL
-/* Definition of ticks count for channel Channel_0. */
-#define LPIT0_CHANNEL_0_TICKS 95999999U
-/* Definition of channel kLPIT_Chnl_0 ID */
-#define LPIT0_CHANNEL_0 kLPIT_Chnl_0
-/* LPIT0 interrupt vector ID (number). */
-#define LPIT0_IRQN LPIT0_IRQn
-/* LPIT0 interrupt handler identifier. */
-#define LPIT0_IRQHANDLER LPIT0_IRQHandler
+#define CAN0_CLOCK_SOURCE 8000000UL
 
 /***********************************************************************************************************************
  * Global variables
@@ -46,8 +32,6 @@ extern "C" {
 extern const flexcan_config_t CAN0_config;
 /* Message buffer 0 configuration structure */
 extern const flexcan_rx_mb_config_t CAN0_rx_mb_config_0;
-extern const lpit_config_t LPIT0_config;
-extern const lpit_chnl_params_t LPIT0_Channel_0_struct;
 
 /***********************************************************************************************************************
  * Initialization functions

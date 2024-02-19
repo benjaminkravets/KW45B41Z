@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="ad906a0c-a4b9-475c-94e4-0a5ff08bdbc3" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="4509740e-09c6-4735-9bda-ab106eca2bc7" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>KW45B41Z83xxxA</processor>
       <package>KW45B41Z83AFTA</package>
@@ -8,7 +8,7 @@
       <cores selected="cm33">
          <core name="Cortex-M33" id="cm33" description=""/>
       </cores>
-      <description>Configuration imported from timer_can</description>
+      <description>Configuration imported from can_interrupt_rx</description>
    </common>
    <preferences>
       <validate_boot_init_only>true</validate_boot_init_only>
@@ -607,8 +607,7 @@
                   <clock_output id="CPU_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="FIRC_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="FRO16K_CLK.outFreq" value="16 kHz" locked="false" accuracy=""/>
-                  <clock_output id="MRCC.MRCC_CAN0_CLK.outFreq" value="16 MHz" locked="false" accuracy=""/>
-                  <clock_output id="MRCC.MRCC_LPIT0_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
+                  <clock_output id="MRCC.MRCC_CAN0_CLK.outFreq" value="8 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_CLK.outFreq" value="32 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_FRODIV_CLK.outFreq" value="16 MHz" locked="false" accuracy=""/>
                   <clock_output id="ROSC_CLK.outFreq" value="32.768 kHz" locked="false" accuracy=""/>
@@ -627,9 +626,8 @@
                   <setting id="CCM32K_OSC32K_CTRL_EXTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_OSC_EN_CFG" value="Enabled" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_XTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
-                  <setting id="MRCC.MRCC_CAN0_DIV.scale" value="6" locked="true"/>
-                  <setting id="MRCC.MRCC_CAN0_SEL.sel" value="SCG.FIRC_CLK" locked="false"/>
-                  <setting id="MRCC.MRCC_LPIT0_SEL.sel" value="SCG.FIRC_CLK" locked="false"/>
+                  <setting id="MRCC.MRCC_CAN0_DIV.scale" value="4" locked="true"/>
+                  <setting id="MRCC.MRCC_CAN0_SEL.sel" value="SCG.SOSC_CLK" locked="false"/>
                   <setting id="SCG.DIVCORE.scale" value="1" locked="true"/>
                   <setting id="SCG.DIVSLOW.scale" value="4" locked="true"/>
                   <setting id="SCG.FIRC_TRIMDIV.scale" value="32" locked="true"/>
@@ -657,21 +655,6 @@
             <dependency resourceType="SWComponent" resourceId="platform.drivers.flexcan" description="An unsupported version of the FLEXCAN Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
                <feature name="version" evaluation="greaterOrEqual">
                   <data type="Version" maxValue="2.11.9">2.10.0</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpit" description="LPIT Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
-               <feature name="enabled" evaluation="equal">
-                  <data type="Boolean">true</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpit" description="An unsupported version of the LPIT Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="greaterOrEqual">
-                  <data type="Version" maxValue="2.1.9">2.0.0</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="Tool" resourceId="Pins" description="The Pins tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
-               <feature name="enabled" evaluation="equal">
-                  <data>true</data>
                </feature>
             </dependency>
             <dependency resourceType="Tool" resourceId="Clocks" description="The Clocks tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
@@ -712,14 +695,9 @@
                         <data type="Frequency" unit="Hz">0</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="ClockOutput" resourceId="MRCC.MRCC_LPIT0_CLK" description="LPIT0 clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="frequency" evaluation="greaterThan">
-                        <data type="Frequency" unit="Hz">0</data>
-                     </feature>
-                  </dependency>
                </dependencies>
                <instances>
-                  <instance name="NVIC" uuid="d6caa50b-c004-46e3-87d9-2dc163116df0" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="3e501059-409d-4f2e-bd17-56f1d3f00952" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
@@ -727,13 +705,13 @@
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
-                  <instance name="CAN0" uuid="66b0ace3-15eb-4c72-9b5d-d4bf3a5e9f20" type="flexcan" type_id="flexcan_5cab76b676858377b40de2b864152fd8" mode="interrupts" peripheral="CAN0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="CAN0" uuid="74d442a6-14c6-430a-a0c0-0df80a07bb4a" type="flexcan" type_id="flexcan_5cab76b676858377b40de2b864152fd8" mode="interrupts" peripheral="CAN0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="interruptsCfg">
                         <setting name="messageBufferIrqs" value="0"/>
                         <set name="interruptsEnable">
                            <selected/>
                         </set>
-                        <setting name="enable_irq" value="false"/>
+                        <setting name="enable_irq" value="true"/>
                         <struct name="interrupt_shared">
                            <setting name="IRQn" value="CAN0_IRQn"/>
                            <setting name="enable_interrrupt" value="enabled"/>
@@ -748,7 +726,7 @@
                            <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
                            <setting name="wakeupSrc" value="kFLEXCAN_WakeupSrcUnfiltered"/>
                            <setting name="flexibleDataRate" value="false"/>
-                           <setting name="baudRate" value="100000"/>
+                           <setting name="baudRate" value="500000"/>
                            <setting name="baudRateFD" value="2000000"/>
                            <setting name="enableBRS" value="false"/>
                            <setting name="dataSize" value="kFLEXCAN_8BperMB"/>
@@ -879,68 +857,33 @@
                         </struct>
                      </config_set>
                   </instance>
-                  <instance name="LPIT0" uuid="939d0916-81aa-4678-8222-4f9647a6de13" type="lpit" type_id="lpit_8e4186d834c8d9f4b6c0dadcc9dc2f05" mode="LPIT_GENERAL" peripheral="LPIT0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="fsl_lpit">
-                        <struct name="lpitConfig">
-                           <setting name="enableRunInDebug" value="false"/>
-                           <setting name="enableRunInDoze" value="false"/>
-                        </struct>
-                        <struct name="timingConfig">
-                           <setting name="clockSource" value="AsyncPeripheralClock"/>
-                           <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
-                        </struct>
-                        <array name="channels">
-                           <struct name="0">
-                              <setting name="lpitChannelPrefixID" value="Channel_0"/>
-                              <setting name="channelNumber" value="0"/>
-                              <setting name="enableChain" value="false"/>
-                              <setting name="timerMode" value="kLPIT_PeriodicCounter"/>
-                              <setting name="timerPeriod" value="1s"/>
-                              <setting name="lpit_trigger_select_t" value="internal_trigger_0"/>
-                              <setting name="enableReloadOnTriggerBool" value="false"/>
-                              <setting name="enableStopOnTimeout" value="false"/>
-                              <setting name="enableStartOnTriggerBool" value="false"/>
-                              <setting name="startTimer" value="true"/>
-                              <setting name="enableInterrupt" value="true"/>
-                           </struct>
-                        </array>
-                        <setting name="enableSharedInterrupt" value="true"/>
-                        <struct name="sharedInterrupt">
-                           <setting name="IRQn" value="LPIT0_IRQn"/>
-                           <setting name="enable_interrrupt" value="enabled"/>
-                           <setting name="enable_priority" value="false"/>
-                           <setting name="priority" value="0"/>
-                           <setting name="enable_custom_name" value="false"/>
-                        </struct>
-                     </config_set>
-                  </instance>
                </instances>
             </functional_group>
          </functional_groups>
          <components>
-            <component name="system" uuid="74d6566d-7f27-4b5f-a743-7699a5eaf9fb" type_id="system_54b53072540eeeb8f8e9343e71f28176">
+            <component name="system" uuid="02a8a241-fc4a-45c0-901f-64971196796c" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions">
                   <setting name="user_definitions" value=""/>
                   <setting name="user_includes" value=""/>
                   <setting name="global_init" value=""/>
                </config_set_global>
             </component>
-            <component name="uart_cmsis_common" uuid="29f53fdd-13c3-425c-ad6e-51ff1368e10d" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
+            <component name="uart_cmsis_common" uuid="4c550d89-5716-4c37-bd45-61ad477bd938" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
                <config_set_global name="global_USART_CMSIS_common" quick_selection="default"/>
             </component>
-            <component name="gpio_adapter_common" uuid="7bd4e418-f7b2-4ae8-83f8-8c7b50fe202b" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
+            <component name="gpio_adapter_common" uuid="7fe6643e-ef43-4315-876d-cd864ddb42fb" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
                <config_set_global name="global_gpio_adapter_common" quick_selection="default"/>
             </component>
-            <component name="msg" uuid="b3108992-41b8-48d3-8b62-d06cd4bbda2e" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="5ba73899-898b-443f-9c2f-eec97bceabda" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
-            <component name="generic_uart" uuid="4e4eb947-8d58-4a53-b16d-2b1fda815c93" type_id="generic_uart_8cae00565451cf2346eb1b8c624e73a6">
+            <component name="generic_uart" uuid="85d790f3-7917-42b4-aed7-c2c10a09533a" type_id="generic_uart_8cae00565451cf2346eb1b8c624e73a6">
                <config_set_global name="global_uart"/>
             </component>
-            <component name="generic_enet" uuid="aef002b1-074e-4e6d-8807-14b193b02179" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
+            <component name="generic_enet" uuid="9be2bab5-4034-494e-a344-54fe10532435" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
                <config_set_global name="global_enet"/>
             </component>
-            <component name="generic_can" uuid="d8d6a410-ea1d-4dab-bfbf-a78ea1efd149" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
+            <component name="generic_can" uuid="5fea22e5-4ebe-437d-8da8-790fa116bd07" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
                <config_set_global name="global_can"/>
             </component>
          </components>

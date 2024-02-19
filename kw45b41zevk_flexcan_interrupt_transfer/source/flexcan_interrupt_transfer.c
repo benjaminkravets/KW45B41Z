@@ -263,25 +263,25 @@ int main(void)
             LOG_INFO("FD called \r\n ");
             txXfer.framefd = &frame;
             (void)FLEXCAN_TransferFDSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
-            /*
+
             while(1){
             	LOG_INFO("Send \r\n");
             	GETCHAR();
             	uint32_t can_status_return = FLEXCAN_TransferFDSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
             	LOG_INFO("%i \r\n", can_status_return);
-            } */
+            }
 #else
             LOG_INFO("Regular called\r\n ");
             txXfer.frame = &frame;
             LOG_INFO("Bit rate: %i \r\n", flexcanConfig.bitRate);
             (void)FLEXCAN_TransferSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
-
+            /*
             while(1){
             	LOG_INFO("Regular called \r\n");
             	GETCHAR();
             	uint32_t can_status_return = FLEXCAN_TransferSendNonBlocking(EXAMPLE_CAN, &flexcanHandle, &txXfer);
             	LOG_INFO("%i \r\n", can_status_return);
-            }
+            } */
 
 #endif
             LOG_INFO("I get here 1 \r\n");

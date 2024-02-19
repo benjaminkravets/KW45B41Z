@@ -69,8 +69,7 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table:
-      - 0: []
+    - interrupt_table: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -109,7 +108,7 @@ instance:
       - clockSourceFreq: 'ClocksTool_DefaultInit'
       - wakeupSrc: 'kFLEXCAN_WakeupSrcUnfiltered'
       - flexibleDataRate: 'false'
-      - baudRate: '100000'
+      - baudRate: '500000'
       - baudRateFD: '2000000'
       - enableBRS: 'false'
       - dataSize: 'kFLEXCAN_8BperMB'
@@ -214,7 +213,7 @@ instance:
 /* clang-format on */
 const flexcan_config_t CAN0_config = {
   .wakeupSrc = kFLEXCAN_WakeupSrcUnfiltered,
-  .bitRate = 100000UL,
+  .bitRate = 500000UL,
   .bitRateFD = 2000000UL,
   .maxMbNum = 16U,
   .enableLoopBack = false,
@@ -227,7 +226,7 @@ const flexcan_config_t CAN0_config = {
   .enablePretendedeNetworking = false,
   .enableTransceiverDelayMeasure = true,
   .timingConfig = {
-    .preDivider = 19,
+    .preDivider = 1,
     .propSeg = 0,
     .phaseSeg1 = 3,
     .phaseSeg2 = 2,
@@ -251,85 +250,12 @@ static void CAN0_init(void) {
 }
 
 /***********************************************************************************************************************
- * LPIT0 initialization code
- **********************************************************************************************************************/
-/* clang-format off */
-/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
-instance:
-- name: 'LPIT0'
-- type: 'lpit'
-- mode: 'LPIT_GENERAL'
-- custom_name_enabled: 'false'
-- type_id: 'lpit_8e4186d834c8d9f4b6c0dadcc9dc2f05'
-- functional_group: 'BOARD_InitPeripherals'
-- peripheral: 'LPIT0'
-- config_sets:
-  - fsl_lpit:
-    - lpitConfig:
-      - enableRunInDebug: 'false'
-      - enableRunInDoze: 'false'
-    - timingConfig:
-      - clockSource: 'AsyncPeripheralClock'
-      - clockSourceFreq: 'ClocksTool_DefaultInit'
-    - channels:
-      - 0:
-        - lpitChannelPrefixID: 'Channel_0'
-        - channelNumber: '0'
-        - enableChain: 'false'
-        - timerMode: 'kLPIT_PeriodicCounter'
-        - timerPeriod: '1s'
-        - lpit_trigger_select_t: 'internal_trigger_0'
-        - enableReloadOnTriggerBool: 'false'
-        - enableStopOnTimeout: 'false'
-        - enableStartOnTriggerBool: 'false'
-        - startTimer: 'true'
-        - enableInterrupt: 'true'
-    - enableSharedInterrupt: 'true'
-    - sharedInterrupt:
-      - IRQn: 'LPIT0_IRQn'
-      - enable_interrrupt: 'enabled'
-      - enable_priority: 'false'
-      - priority: '0'
-      - enable_custom_name: 'false'
- * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
-/* clang-format on */
-const lpit_chnl_params_t LPIT0_Channel_0_struct = {
-  .chainChannel = false,
-  .timerMode = kLPIT_PeriodicCounter,
-  .triggerSource = kLPIT_TriggerSource_Internal,
-  .triggerSelect = kLPIT_Trigger_TimerChn0,
-  .enableReloadOnTrigger = false,
-  .enableStopOnTimeout = false,
-  .enableStartOnTrigger = false
-};
-const lpit_config_t LPIT0_config = {
-  .enableRunInDebug = false,
-  .enableRunInDoze = false
-};
-
-static void LPIT0_init(void) {
-  /* Initialize the LPIT. */
-  LPIT_Init(LPIT0_PERIPHERAL, &LPIT0_config);
-  /* Setup channel 0. */
-  LPIT_SetupChannel(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0, &LPIT0_Channel_0_struct);
-  /* Set channel 0 period to 96000000 ticks. */
-  LPIT_SetTimerPeriod(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0, LPIT0_CHANNEL_0_TICKS);
-  /* Enable interrupts from channel Channel_0. */
-  LPIT_EnableInterrupts(LPIT0_PERIPHERAL, kLPIT_Channel0TimerInterruptEnable);
-  /* Enable interrupt LPIT0_IRQN request in the NVIC */
-  EnableIRQ(LPIT0_IRQN);
-  /* Start channel 0. */
-  LPIT_StartTimer(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0);
-}
-
-/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
   CAN0_init();
-  LPIT0_init();
 }
 
 /***********************************************************************************************************************
