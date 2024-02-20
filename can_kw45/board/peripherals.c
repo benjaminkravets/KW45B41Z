@@ -69,7 +69,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -95,7 +96,7 @@ instance:
   - interruptsCfg:
     - messageBufferIrqs: '0'
     - interruptsEnable: ''
-    - enable_irq: 'false'
+    - enable_irq: 'true'
     - interrupt_shared:
       - IRQn: 'CAN0_IRQn'
       - enable_interrrupt: 'enabled'
@@ -122,8 +123,8 @@ instance:
       - enableDoze: 'false'
       - enableTransceiverDelayMeasure: 'true'
       - timingConfig:
-        - phaseSeg1: '4'
-        - phaseSeg2: '3'
+        - phaseSeg1: '7'
+        - phaseSeg2: '7'
         - rJumpwidth: '2'
         - bitTime: []
         - fphaseSeg1: '4'
@@ -226,10 +227,10 @@ const flexcan_config_t CAN0_config = {
   .enablePretendedeNetworking = false,
   .enableTransceiverDelayMeasure = true,
   .timingConfig = {
-    .preDivider = 1,
+    .preDivider = 3,
     .propSeg = 0,
-    .phaseSeg1 = 3,
-    .phaseSeg2 = 2,
+    .phaseSeg1 = 6,
+    .phaseSeg2 = 6,
     .rJumpwidth = 1,
     .fpropSeg = 0,
   }
@@ -247,6 +248,8 @@ static void CAN0_init(void) {
   FLEXCAN_SetRxMbConfig(CAN0_PERIPHERAL, 0, &CAN0_rx_mb_config_0, true);
   /* Message buffer 1 initialization */
   FLEXCAN_SetTxMbConfig(CAN0_PERIPHERAL, 1, true);
+  /* Enable interrupt CAN0_IRQn request in the NVIC. */
+  EnableIRQ(CAN0_FLEXCAN_IRQN);
 }
 
 /***********************************************************************************************************************

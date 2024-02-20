@@ -60,6 +60,10 @@ flexcan_frame_t frame;
 uint32_t txIdentifier;
 uint32_t rxIdentifier;
 
+flexcan_config_t flexcanConfig;
+flexcan_rx_mb_config_t mbConfig;
+uint8_t node_type;
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -99,9 +103,7 @@ static FLEXCAN_CALLBACK(flexcan_callback)
  */
 int main(void)
 {
-    flexcan_config_t flexcanConfig;
-    flexcan_rx_mb_config_t mbConfig;
-    uint8_t node_type;
+
 
     /* Initialize board hardware. */
     BOARD_InitPins();
@@ -248,6 +250,12 @@ int main(void)
     {
         if ((node_type == 'A') || (node_type == 'a'))
         {
+
+
+        	LOG_INFO("%i \r\n", flexcanConfig.timingConfig.phaseSeg1);
+        	LOG_INFO("%i \r\n", flexcanConfig.timingConfig.phaseSeg2);
+        	LOG_INFO("%i \r\n", flexcanConfig.timingConfig.propSeg);
+
             GETCHAR();
 
             frame.id     = FLEXCAN_ID_STD(txIdentifier);

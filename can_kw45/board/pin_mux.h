@@ -25,19 +25,6 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-/*! @name PORTA19 (number 14), Q1[1]/J1[5]/LED_G/TPM0_CH2
-  @{ */
-
-/* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_LED_GREEN_GPIO GPIOA                /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_LED_GREEN_GPIO_PIN_MASK (1U << 19U) /*!<@brief GPIO pin mask */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_INITPINS_LED_GREEN_PORT PORTA                /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_LED_GREEN_PIN 19U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_LED_GREEN_PIN_MASK (1U << 19U)      /*!<@brief PORT pin mask */
-                                                           /* @} */
-
 /*! @name PORTC4 (number 42), U8[4]/J1[3]/J13[1]/CAN0_TX
   @{ */
 
@@ -55,6 +42,19 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_CAN_RX_PIN 5U                   /*!<@brief PORT pin number */
 #define BOARD_INITPINS_CAN_RX_PIN_MASK (1U << 5U)      /*!<@brief PORT pin mask */
                                                        /* @} */
+
+/*! @name PORTA19 (number 14), Q1[1]/J1[5]/LED_G/TPM0_CH2
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LED_GREEN_GPIO GPIOA                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LED_GREEN_GPIO_PIN_MASK (1U << 19U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_LED_GREEN_PORT PORTA                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_LED_GREEN_PIN 19U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LED_GREEN_PIN_MASK (1U << 19U)      /*!<@brief PORT pin mask */
+                                                           /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

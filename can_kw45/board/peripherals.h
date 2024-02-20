@@ -24,7 +24,11 @@ extern "C" {
 /* Definition of peripheral ID */
 #define CAN0_PERIPHERAL CAN0
 /* Definition of the clock source frequency */
-#define CAN0_CLOCK_SOURCE 8000000UL
+#define CAN0_CLOCK_SOURCE 32000000UL
+/* CAN0 interrupt vector ID (number). */
+#define CAN0_FLEXCAN_IRQN CAN0_IRQn
+/* CAN0 interrupt handler identifier. */
+#define CAN0_FLEXCAN_IRQHANDLER CAN0_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables

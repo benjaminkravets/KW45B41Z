@@ -6,7 +6,7 @@
  */
 
 /**
- * @file    can_interrupt_rx.cpp
+ * @file    can_kw45.c
  * @brief   Application entry point.
  */
 #include <stdio.h>
@@ -19,19 +19,6 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
-/* CAN0_IRQn interrupt handler */
-void CAN0_FLEXCAN_IRQHANDLER(void) {
-  /*  Place your code here */
-  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
-     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
-
-  GPIO_PortToggle(GPIOA, 1u << 19u);
-
-  #if defined __CORTEX_M && (__CORTEX_M == 4U)
-    __DSB();
-  #endif
-}
-
 
 /*
  * @brief   Application entry point.
@@ -54,12 +41,12 @@ int main(void) {
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
         i++ ;
+        GETCHAR();
+        GPIO_PortToggle(GPIOA, 1u << 19);
+        //FLEXCAN_TransferSendNonBlocking(CAN0, handle, pMbXfer);
         /* 'Dummy' NOP to allow source level single stepping of
             tight while() loop */
         __asm volatile ("nop");
-        //if (i % 1000000 == 0){
-        //	GPIO_PortToggle(GPIOA, 1u << 19u);
-        //}
     }
     return 0 ;
 }
