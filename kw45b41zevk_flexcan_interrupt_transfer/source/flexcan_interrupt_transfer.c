@@ -198,6 +198,7 @@ int main(void)
     if (FLEXCAN_CalculateImprovedTimingValues(EXAMPLE_CAN, flexcanConfig.bitRate, EXAMPLE_CAN_CLK_FREQ, &timing_config))
     {
         /* Update the improved timing configuration*/
+    	LOG_INFO("using improved");
         memcpy(&(flexcanConfig.timingConfig), &timing_config, sizeof(flexcan_timing_config_t));
     }
     else
