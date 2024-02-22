@@ -29,6 +29,8 @@ uint8_t DLC;
 flexcan_frame_t frame;
 flexcan_mb_transfer_t txXfer, rxXfer;
 
+#define RX_MESSAGE_BUFFER_NUM (0)
+#define TX_MESSAGE_BUFFER_NUM (1)
 
 
 /*
@@ -54,7 +56,9 @@ int main(void) {
     frame.length = (uint8_t)DLC;
 
     txXfer.mbIdx = (uint8_t)TX_MESSAGE_BUFFER_NUM;
+    rxXfer.mbIdx = (uint8_t)RX_MESSAGE_BUFFER_NUM;
     txXfer.frame = &frame;
+    rxXfer.frame = &frame;
 
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
     /* Init FSL debug console. */
@@ -70,7 +74,8 @@ int main(void) {
         i++ ;
         GETCHAR();
         GPIO_PortToggle(GPIOA, 1u << 19);
-        //FLEXCAN_TransferSendNonBlocking(CAN0, handle, pMbXfer);
+        FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
+        FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
         /* 'Dummy' NOP to allow source level single stepping of
             tight while() loop */
         __asm volatile ("nop");
