@@ -33,6 +33,24 @@ flexcan_mb_transfer_t txXfer, rxXfer;
 #define TX_MESSAGE_BUFFER_NUM (1)
 
 
+/* CAN0_IRQn interrupt handler */
+void CAN0_FLEXCAN_IRQHANDLER(void) {
+  /*  Place your code here */
+  uint32_t flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
+  FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
+  FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
+
+  FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags);
+
+  GPIO_PortToggle(GPIOA, 1u << 19);
+  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+  #endif
+}
+
+
 /*
  * @brief   Application entry point.
  */
@@ -71,11 +89,13 @@ int main(void) {
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
+    	/*
         i++ ;
         GETCHAR();
         GPIO_PortToggle(GPIOA, 1u << 19);
         FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
         FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
+        */
         /* 'Dummy' NOP to allow source level single stepping of
             tight while() loop */
         __asm volatile ("nop");
