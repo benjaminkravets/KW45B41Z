@@ -101,13 +101,13 @@ instance:
       - IRQn: 'CAN0_IRQn'
       - enable_interrrupt: 'enabled'
       - enable_priority: 'false'
-      - priority: '0'
+      - priority: '2'
       - enable_custom_name: 'false'
   - fsl_flexcan:
     - can_config:
       - clockSource: 'kFLEXCAN_ClkSrcOsc'
       - clockSourceFreq: 'ClocksTool_DefaultInit'
-      - wakeupSrc: 'kFLEXCAN_WakeupSrcUnfiltered'
+      - wakeupSrc: 'kFLEXCAN_WakeupSrcFiltered'
       - flexibleDataRate: 'false'
       - baudRate: '500000'
       - baudRateFD: '2000000'
@@ -213,7 +213,7 @@ instance:
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const flexcan_config_t CAN0_config = {
-  .wakeupSrc = kFLEXCAN_WakeupSrcUnfiltered,
+  .wakeupSrc = kFLEXCAN_WakeupSrcFiltered,
   .bitRate = 500000UL,
   .bitRateFD = 2000000UL,
   .maxMbNum = 16U,

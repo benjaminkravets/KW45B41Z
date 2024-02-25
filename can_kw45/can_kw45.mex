@@ -717,7 +717,7 @@
                            <setting name="IRQn" value="CAN0_IRQn"/>
                            <setting name="enable_interrrupt" value="enabled"/>
                            <setting name="enable_priority" value="false"/>
-                           <setting name="priority" value="0"/>
+                           <setting name="priority" value="2"/>
                            <setting name="enable_custom_name" value="false"/>
                         </struct>
                      </config_set>
@@ -725,7 +725,7 @@
                         <struct name="can_config">
                            <setting name="clockSource" value="kFLEXCAN_ClkSrcOsc"/>
                            <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
-                           <setting name="wakeupSrc" value="kFLEXCAN_WakeupSrcUnfiltered"/>
+                           <setting name="wakeupSrc" value="kFLEXCAN_WakeupSrcFiltered"/>
                            <setting name="flexibleDataRate" value="false"/>
                            <setting name="baudRate" value="500000"/>
                            <setting name="baudRateFD" value="2000000"/>

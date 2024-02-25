@@ -36,13 +36,20 @@ flexcan_mb_transfer_t txXfer, rxXfer;
 /* CAN0_IRQn interrupt handler */
 void CAN0_FLEXCAN_IRQHANDLER(void) {
   /*  Place your code here */
-  uint32_t flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
-  FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
-  FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
-
-  FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags);
+  PRINTF("irq called \r\n");
+  //uint32_t flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
+  //FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
+  //FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
 
   GPIO_PortToggle(GPIOA, 1u << 19);
+
+  uint32_t flags2 = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, rxIdentifier);
+  FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags2);
+  FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, flags2);
+
+
+  PRINTF("irq end \r\n");
+
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */
   #if defined __CORTEX_M && (__CORTEX_M == 4U)
@@ -78,6 +85,8 @@ int main(void) {
     txXfer.frame = &frame;
     rxXfer.frame = &frame;
 
+
+
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
     /* Init FSL debug console. */
     BOARD_InitDebugConsole();
@@ -89,13 +98,16 @@ int main(void) {
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
-    	/*
+
         i++ ;
         GETCHAR();
         GPIO_PortToggle(GPIOA, 1u << 19);
         FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
-        FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
-        */
+        //FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
+
+        //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
+
+
         /* 'Dummy' NOP to allow source level single stepping of
             tight while() loop */
         __asm volatile ("nop");
