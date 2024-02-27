@@ -37,16 +37,17 @@ flexcan_mb_transfer_t txXfer, rxXfer;
 void CAN0_FLEXCAN_IRQHANDLER(void) {
   /*  Place your code here */
   PRINTF("irq called \r\n");
-  //uint32_t flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
-  //FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
-  //FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
+  uint32_t flags;
+  flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
+  FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
+  FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
 
   GPIO_PortToggle(GPIOA, 1u << 19);
 
-  uint32_t flags2 = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, rxIdentifier);
+  uint32_t flags2;
+  flags2 = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, rxIdentifier);
   FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags2);
   FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, flags2);
-
 
   PRINTF("irq end \r\n");
 
@@ -97,12 +98,14 @@ int main(void) {
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
+    FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
+    //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
     while(1) {
 
-        i++ ;
-        GETCHAR();
+        //i++ ;
+        //GETCHAR();
         GPIO_PortToggle(GPIOA, 1u << 19);
-        FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
+        //FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
         //FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
 
         //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
