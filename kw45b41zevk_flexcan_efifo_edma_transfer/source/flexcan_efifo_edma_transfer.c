@@ -148,6 +148,8 @@ int main(void)
      */
     FLEXCAN_GetDefaultConfig(&flexcanConfig);
 
+    flexcanConfig.bitRate = 500000;
+
 #if defined(EXAMPLE_CAN_CLK_SOURCE)
     flexcanConfig.clkSrc = EXAMPLE_CAN_CLK_SOURCE;
 #endif

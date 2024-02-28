@@ -38,18 +38,24 @@ void CAN0_FLEXCAN_IRQHANDLER(void) {
   /*  Place your code here */
   PRINTF("irq called \r\n");
   uint32_t flags;
+  PRINTF("%i \r\n", flags);
   flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
   FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
   FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
+  PRINTF("%i \r\n", flags);
+
 
   GPIO_PortToggle(GPIOA, 1u << 19);
 
   uint32_t flags2;
+  PRINTF("%i \r\n", flags2);
   flags2 = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, rxIdentifier);
   FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags2);
   FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, flags2);
+  PRINTF("%i \r\n", flags2);
 
-  PRINTF("irq end \r\n");
+  PRINTF("irq end \r\n");/* CAN0_IRQn interrupt handler */
+
 
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */
@@ -99,12 +105,12 @@ int main(void) {
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
-    //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
+    //FLEXCAN_TransferReceiveBlocking(CAN0, &rxXfer.mbIdx, &frame);
     while(1) {
 
         //i++ ;
         //GETCHAR();
-        GPIO_PortToggle(GPIOA, 1u << 19);
+        //GPIO_PortToggle(GPIOA, 1u << 19);
         //FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
         //FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
 
