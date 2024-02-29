@@ -702,8 +702,20 @@
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
-                        <array name="interrupts"/>
+                        <array name="interrupts">
+                           <struct name="0">
+                              <setting name="channelId" value="int_0"/>
+                              <struct name="interrupt_t">
+                                 <setting name="IRQn" value="CTI_IRQn"/>
+                                 <setting name="enable_interrrupt" value="enabled"/>
+                                 <setting name="enable_priority" value="false"/>
+                                 <setting name="priority" value="0"/>
+                                 <setting name="enable_custom_name" value="false"/>
+                              </struct>
+                           </struct>
+                        </array>
                      </config_set>
                   </instance>
                   <instance name="CAN0" uuid="0386b99b-5c9f-4240-a4e4-2d9feda618dd" type="flexcan" type_id="flexcan_5cab76b676858377b40de2b864152fd8" mode="interrupts" peripheral="CAN0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">

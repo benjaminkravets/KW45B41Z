@@ -54,6 +54,8 @@ void CAN0_FLEXCAN_IRQHANDLER(void) {
   FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, flags2);
   PRINTF("%i \r\n", flags2);
 
+  FLEXCAN_TransferReceiveBlocking(CAN0, &rxXfer.mbIdx, &frame);
+
   PRINTF("irq end \r\n");/* CAN0_IRQn interrupt handler */
 
 
@@ -106,6 +108,7 @@ int main(void) {
     /* Enter an infinite loop, just incrementing a counter. */
     FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
     //FLEXCAN_TransferReceiveBlocking(CAN0, &rxXfer.mbIdx, &frame);
+
     while(1) {
 
         //i++ ;
