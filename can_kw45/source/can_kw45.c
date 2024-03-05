@@ -37,24 +37,28 @@ flexcan_mb_transfer_t txXfer, rxXfer;
 void CAN0_FLEXCAN_IRQHANDLER(void) {
   /*  Place your code here */
   PRINTF("irq called \r\n");
-  uint32_t flags;
-  PRINTF("%i \r\n", flags);
+
+  /*
+  uint64_t flags;
   flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
+  PRINTF("%i \r\n", flags);
   FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
   FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
-  PRINTF("%i \r\n", flags);
 
+
+  PRINTF("%i \r\n", flags);
+  */
 
   GPIO_PortToggle(GPIOA, 1u << 19);
 
-  uint32_t flags2;
+  uint64_t flags2;
+
+  flags2 = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, 1);
   PRINTF("%i \r\n", flags2);
-  flags2 = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, rxIdentifier);
   FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags2);
   FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, flags2);
   PRINTF("%i \r\n", flags2);
 
-  FLEXCAN_TransferReceiveBlocking(CAN0, &rxXfer.mbIdx, &frame);
 
   PRINTF("irq end \r\n");/* CAN0_IRQn interrupt handler */
 
@@ -82,7 +86,8 @@ int main(void) {
     rxIdentifier = 0x446;
     DLC = 8;
     FLEXCAN_TransferCreateHandle(CAN0_PERIPHERAL, &flexcanHandle, NULL, NULL);
-    FLEXCAN_SetRxMbGlobalMask(CAN0_PERIPHERAL, FLEXCAN_RX_MB_STD_MASK(rxIdentifier, 0, 0));
+    FLEXCAN_SetRxMbGlobalMask(CAN0_PERIPHERAL, rxIdentifier);
+
 
     frame.id = FLEXCAN_ID_STD(txIdentifier);
     frame.format = (uint8_t)kFLEXCAN_FrameFormatStandard;
@@ -93,6 +98,7 @@ int main(void) {
     rxXfer.mbIdx = (uint8_t)RX_MESSAGE_BUFFER_NUM;
     txXfer.frame = &frame;
     rxXfer.frame = &frame;
+
 
 
 
@@ -118,6 +124,9 @@ int main(void) {
         //FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
 
         //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
+
+        //PRINTF("%i \r\n", frame.dataByte0);
+        //PRINTF("%i \r\n", frame.dataByte1);
 
 
         /* 'Dummy' NOP to allow source level single stepping of

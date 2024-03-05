@@ -71,7 +71,16 @@ instance:
   - nvic:
     - interrupt_table:
       - 0: []
-    - interrupts: []
+      - 1: []
+    - interrupts:
+      - 0:
+        - channelId: 'int_0'
+        - interrupt_t:
+          - IRQn: 'CTI_IRQn'
+          - enable_interrrupt: 'enabled'
+          - enable_priority: 'false'
+          - priority: '0'
+          - enable_custom_name: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
@@ -255,10 +264,18 @@ static void CAN0_init(void) {
 /***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
+static void BOARD_InitPeripherals_CommonPostInit(void)
+{
+  /* Enable interrupt CTI_IRQn request in the NVIC. */
+  EnableIRQ(INT_0_IRQN);
+}
+
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
   CAN0_init();
+  /* Common post-initialization */
+  BOARD_InitPeripherals_CommonPostInit();
 }
 
 /***********************************************************************************************************************
