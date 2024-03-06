@@ -26,8 +26,19 @@ uint32_t txIdentifier;
 uint32_t rxIdentifier;
 uint8_t DLC;
 
+//CAN frame and transfer buffers
 flexcan_frame_t frame;
 flexcan_mb_transfer_t txXfer, rxXfer;
+
+//Status flag to indicate that work needs done after IRQ and LED sequence vars
+uint8_t datacheck = 0;
+uint8_t led_blink_delay;
+uint8_t led_blink_count;
+
+
+
+//Systick counter for delay block function
+volatile uint32_t g_systickCounter;
 
 #define RX_MESSAGE_BUFFER_NUM (0)
 #define TX_MESSAGE_BUFFER_NUM (1)
@@ -38,18 +49,9 @@ void CAN0_FLEXCAN_IRQHANDLER(void) {
   /*  Place your code here */
   PRINTF("irq called \r\n");
 
-  /*
-  uint64_t flags;
-  flags = FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
-  PRINTF("%i \r\n", flags);
-  FLEXCAN_ClearStatusFlags(CAN0_PERIPHERAL, flags);
-  FLEXCAN_GetStatusFlags(CAN0_PERIPHERAL);
-
-
-  PRINTF("%i \r\n", flags);
-  */
-
+  FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
   GPIO_PortToggle(GPIOA, 1u << 19);
+  datacheck = 1;
 
   uint64_t flags2;
 
@@ -71,6 +73,23 @@ void CAN0_FLEXCAN_IRQHANDLER(void) {
 }
 
 
+void SysTick_Handler(void)
+{
+    if (g_systickCounter != 0U)
+    {
+        g_systickCounter--;
+    }
+}
+
+//Delay n milliseconds
+void SysTick_DelayTicks(uint32_t n)
+{
+    g_systickCounter = n;
+    while (g_systickCounter != 0U)
+    {
+    }
+}
+
 /*
  * @brief   Application entry point.
  */
@@ -86,7 +105,7 @@ int main(void) {
     rxIdentifier = 0x446;
     DLC = 8;
     FLEXCAN_TransferCreateHandle(CAN0_PERIPHERAL, &flexcanHandle, NULL, NULL);
-    FLEXCAN_SetRxMbGlobalMask(CAN0_PERIPHERAL, rxIdentifier);
+    FLEXCAN_SetRxMbGlobalMask(CAN0_PERIPHERAL, FLEXCAN_RX_MB_STD_MASK(rxIdentifier, 0, 0));
 
 
     frame.id = FLEXCAN_ID_STD(txIdentifier);
@@ -113,20 +132,29 @@ int main(void) {
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
-    //FLEXCAN_TransferReceiveBlocking(CAN0, &rxXfer.mbIdx, &frame);
+
+    /* Set systick reload value to generate 1ms interrupt */
+    if (SysTick_Config(SystemCoreClock / 1000U))
+    {
+        while (1)
+        {
+        }
+    }
 
     while(1) {
 
-        //i++ ;
-        //GETCHAR();
-        //GPIO_PortToggle(GPIOA, 1u << 19);
+        i++ ;
+
         //FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
         //FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
 
         //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
 
-        //PRINTF("%i \r\n", frame.dataByte0);
-        //PRINTF("%i \r\n", frame.dataByte1);
+        PRINTF("%i \r\n", frame.dataByte0);
+        PRINTF("%i \r\n", frame.dataByte1);
+
+        //SysTick_DelayTicks(1000U);
+        //GPIO_PortToggle(GPIOA, 1u << 19U);
 
 
         /* 'Dummy' NOP to allow source level single stepping of
