@@ -50,7 +50,12 @@ void CAN0_FLEXCAN_IRQHANDLER(void) {
   PRINTF("irq called \r\n");
 
   FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
-  GPIO_PortToggle(GPIOA, 1u << 19);
+
+  led_blink_delay = frame.dataByte0;
+  led_blink_count = frame.dataByte1;
+
+
+
   datacheck = 1;
 
   uint64_t flags2;
@@ -150,11 +155,23 @@ int main(void) {
 
         //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
 
-        PRINTF("%i \r\n", frame.dataByte0);
-        PRINTF("%i \r\n", frame.dataByte1);
 
-        //SysTick_DelayTicks(1000U);
-        //GPIO_PortToggle(GPIOA, 1u << 19U);
+        if (datacheck){
+
+            //for(int z = 0; z < led_blink_count; z++){
+            //    SysTick_DelayTicks(led_blink_delay);
+            //    GPIO_PortToggle(GPIOA, 1u << 19U);
+            //}
+            datacheck = 0;
+
+            FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
+
+        }
+
+
+
+
+
 
 
         /* 'Dummy' NOP to allow source level single stepping of
