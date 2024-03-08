@@ -106,7 +106,7 @@ int main(void) {
     BOARD_InitBootPeripherals();
 
     //CAN handle and variable initialization
-    txIdentifier = 0x321;
+    txIdentifier = 0x123;
     rxIdentifier = 0x446;
     DLC = 8;
     FLEXCAN_TransferCreateHandle(CAN0_PERIPHERAL, &flexcanHandle, NULL, NULL);
@@ -152,19 +152,26 @@ int main(void) {
 
         //FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
         //FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
-
         //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
+
+        //GETCHAR();
+        //FLEXCAN_TransferSendBlocking(CAN0, txXfer.mbIdx, &frame);
+
 
 
         if (datacheck){
 
-            //for(int z = 0; z < led_blink_count; z++){
-            //    SysTick_DelayTicks(led_blink_delay);
-            //    GPIO_PortToggle(GPIOA, 1u << 19U);
-            //}
+            for(int z = 0; z < led_blink_count; z++){
+                SysTick_DelayTicks(led_blink_delay);
+                GPIO_PortToggle(GPIOA, 1u << 19U);
+            }
+
+            PRINTF("%i \r\n", led_blink_count);
+            PRINTF("%i \r\n", led_blink_delay);
+
             datacheck = 0;
 
-            FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
+            //FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
 
         }
 
