@@ -47,28 +47,21 @@ volatile uint32_t g_systickCounter;
 /* CAN0_IRQn interrupt handler */
 void CAN0_FLEXCAN_IRQHANDLER(void) {
   /*  Place your code here */
-  PRINTF("irq called \r\n");
 
   FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
 
   led_blink_delay = frame.dataByte0;
   led_blink_count = frame.dataByte1;
 
-
-
   datacheck = 1;
 
-  uint64_t flags2;
+  uint64_t flags;
 
-  flags2 = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, 1);
-  PRINTF("%i \r\n", flags2);
-  FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags2);
-  FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, flags2);
-  PRINTF("%i \r\n", flags2);
-
-
-  PRINTF("irq end \r\n");/* CAN0_IRQn interrupt handler */
-
+  flags = FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, 1);
+  PRINTF("%i \r\n", flags);
+  FLEXCAN_ClearMbStatusFlags(CAN0_PERIPHERAL, flags);
+  FLEXCAN_GetMbStatusFlags(CAN0_PERIPHERAL, flags);
+  PRINTF("%i \r\n", flags);
 
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */
@@ -106,9 +99,9 @@ int main(void) {
     BOARD_InitBootPeripherals();
 
     //CAN handle and variable initialization
-    txIdentifier = 0x123;
-    rxIdentifier = 0x446;
-    DLC = 8;
+    txIdentifier = 0x45;
+    rxIdentifier = 0x321;
+    DLC = 2;
     FLEXCAN_TransferCreateHandle(CAN0_PERIPHERAL, &flexcanHandle, NULL, NULL);
     FLEXCAN_SetRxMbGlobalMask(CAN0_PERIPHERAL, FLEXCAN_RX_MB_STD_MASK(rxIdentifier, 0, 0));
 
@@ -122,8 +115,6 @@ int main(void) {
     rxXfer.mbIdx = (uint8_t)RX_MESSAGE_BUFFER_NUM;
     txXfer.frame = &frame;
     rxXfer.frame = &frame;
-
-
 
 
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
@@ -152,12 +143,6 @@ int main(void) {
 
         //FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
         //FLEXCAN_TransferReceiveNonBlocking(CAN0, &flexcanHandle, &rxXfer);
-        //FLEXCAN_TransferReceiveBlocking(CAN0, rxXfer.mbIdx, &frame);
-
-        //GETCHAR();
-        //FLEXCAN_TransferSendBlocking(CAN0, txXfer.mbIdx, &frame);
-
-
 
         if (datacheck){
 
@@ -169,17 +154,13 @@ int main(void) {
             PRINTF("%i \r\n", led_blink_count);
             PRINTF("%i \r\n", led_blink_delay);
 
+
+            frame.id = FLEXCAN_ID_STD(txIdentifier);
+            FLEXCAN_TransferSendBlocking(CAN0, txXfer.mbIdx, &frame);
+
             datacheck = 0;
 
-            //FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
-
         }
-
-
-
-
-
-
 
         /* 'Dummy' NOP to allow source level single stepping of
             tight while() loop */

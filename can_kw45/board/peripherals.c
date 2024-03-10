@@ -160,7 +160,7 @@ instance:
         - mbID: '0'
         - mbType: 'mbRx'
         - rxMb:
-          - id: '0'
+          - id: '0x321'
           - format: 'kFLEXCAN_FrameFormatStandard'
           - type: 'kFLEXCAN_FrameTypeData'
       - 1:
@@ -246,7 +246,7 @@ const flexcan_config_t CAN0_config = {
 };
 /* Message buffer 0 configuration structure */
 const flexcan_rx_mb_config_t CAN0_rx_mb_config_0 = {
-  .id = FLEXCAN_ID_STD(0UL),
+  .id = FLEXCAN_ID_STD(801UL),
   .format = kFLEXCAN_FrameFormatStandard,
   .type = kFLEXCAN_FrameTypeData
 };

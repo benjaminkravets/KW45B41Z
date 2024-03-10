@@ -785,7 +785,7 @@
                               <setting name="mbID" value="0"/>
                               <setting name="mbType" value="mbRx"/>
                               <struct name="rxMb">
-                                 <setting name="id" value="0"/>
+                                 <setting name="id" value="0x321"/>
                                  <setting name="format" value="kFLEXCAN_FrameFormatStandard"/>
                                  <setting name="type" value="kFLEXCAN_FrameTypeData"/>
                               </struct>
