@@ -82,7 +82,7 @@
     <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\kw45b41zevk_lpspi_edma_b2b_transfer_master.axf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="kw45b41zevk_lpspi_edma_b2b_transfer_master"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.1544626659"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.1938019207"/>
     <booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/kw45b41zevk_lpspi_edma_b2b_transfer_master"/>

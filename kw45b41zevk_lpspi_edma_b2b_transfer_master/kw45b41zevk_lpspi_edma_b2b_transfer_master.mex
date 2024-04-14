@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="d04b618b-ce60-4597-816c-c0b453203e0f" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="e5547489-a348-420d-b878-87f017bef1c4" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>KW45B41Z83xxxA</processor>
       <package>KW45B41Z83AFTA</package>
