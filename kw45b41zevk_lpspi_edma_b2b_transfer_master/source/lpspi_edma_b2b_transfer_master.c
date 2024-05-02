@@ -160,7 +160,7 @@ int main(void)
         /* Set up the transfer data */
         for (i = 0U; i < TRANSFER_SIZE; i++)
         {
-            masterTxData[i] = (i + loopCount) % 256U;
+            masterTxData[i] = (i + 65);
             masterRxData[i] = 0U;
         }
 
@@ -188,22 +188,29 @@ int main(void)
         LPSPI_MasterTransferEDMA(EXAMPLE_LPSPI_MASTER_BASEADDR, &g_m_edma_handle, &masterXfer);
 
         /* Wait until transfer completed */
+
         while (!isTransferCompleted)
         {
         }
 
+
         /* Delay to wait slave is ready */
+        /*
         if (SysTick_Config(SystemCoreClock / 1000U))
         {
             while (1)
             {
             }
         }
+        */
         /* Delay 20 ms */
+        /*
         g_systickCounter = 20U;
         while (g_systickCounter != 0U)
         {
         }
+        */
+
         /* Start master transfer, receive data from slave */
         isTransferCompleted = false;
         masterXfer.txData   = NULL;
@@ -213,6 +220,7 @@ int main(void)
             EXAMPLE_LPSPI_MASTER_PCS_FOR_TRANSFER | kLPSPI_MasterByteSwap | kLPSPI_MasterPcsContinuous;
 
         LPSPI_MasterTransferEDMA(EXAMPLE_LPSPI_MASTER_BASEADDR, &g_m_edma_handle, &masterXfer);
+
 
         /* Wait until transfer completed */
         while (!isTransferCompleted)
@@ -246,6 +254,18 @@ int main(void)
         else
         {
             PRINTF(" \r\nError occurred in LPSPI transfer ! \r\n");
+            /* Print out receive buffer */
+            PRINTF("\r\n Master received:\r\n");
+            for (i = 0; i < TRANSFER_SIZE; i++)
+            {
+                /* Print 16 numbers in a line */
+                if ((i & 0x0FU) == 0U)
+                {
+                    PRINTF("\r\n");
+                }
+                PRINTF(" %02X", masterRxData[i]);
+            }
+            PRINTF("\r\n");
         }
 
         /* Wait for press any key */

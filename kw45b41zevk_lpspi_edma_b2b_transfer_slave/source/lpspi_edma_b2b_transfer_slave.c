@@ -131,10 +131,9 @@ int main(void)
 #endif
     LPSPI_SlaveTransferCreateHandleEDMA(EXAMPLE_LPSPI_SLAVE_BASEADDR, &g_s_edma_handle, LPSPI_SlaveUserCallback, NULL,
                                         &lpspiEdmaSlaveRxRegToRxDataHandle, &lpspiEdmaSlaveTxDataToTxRegHandle);
-    uint16_t count = 0;
+
     while (1)
     {
-    	count += 1;
         PRINTF("\r\n Slave example is running...\r\n");
 
         /* Reset the receive buffer */
@@ -158,6 +157,10 @@ int main(void)
         }
 
         /* Set slave transfer ready to send back data */
+
+        for (uint8_t i = 0; i < 64; i++){
+        	slaveRxData[i] = 65;
+        }
         isTransferCompleted = false;
 
         slaveXfer.txData      = slaveRxData;
@@ -165,11 +168,11 @@ int main(void)
         slaveXfer.dataSize    = TRANSFER_SIZE;
         slaveXfer.configFlags = EXAMPLE_LPSPI_SLAVE_PCS_FOR_TRANSFER | kLPSPI_SlaveByteSwap;
 
-        //LPSPI_SlaveTransferEDMA(EXAMPLE_LPSPI_SLAVE_BASEADDR, &g_s_edma_handle, &slaveXfer);
+        LPSPI_SlaveTransferEDMA(EXAMPLE_LPSPI_SLAVE_BASEADDR, &g_s_edma_handle, &slaveXfer);
 
-        //while (!isTransferCompleted)
-        //{
-        //}
+        while (!isTransferCompleted)
+        {
+        }
 
         /* Print out receive buffer */
         PRINTF("\r\n Slave receive:");
@@ -183,6 +186,5 @@ int main(void)
             PRINTF(" %02X", slaveRxData[i]);
         }
         PRINTF("\r\n");
-        PRINTF("%i", count);
     }
 }
