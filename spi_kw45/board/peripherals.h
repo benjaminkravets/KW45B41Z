@@ -9,9 +9,11 @@
 /***********************************************************************************************************************
  * Included files
  **********************************************************************************************************************/
+#include "fsl_edma.h"
 #include "fsl_common.h"
 #include "fsl_clock.h"
 #include "fsl_lpspi.h"
+#include "fsl_lpspi_edma.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -21,16 +23,34 @@ extern "C" {
  * Definitions
  **********************************************************************************************************************/
 /* Definitions for BOARD_InitPeripherals functional group */
+/* Used DMA device. */
+#define DMA0_DMA_BASEADDR DMA0
 /* BOARD_InitPeripherals defines for LPSPI0 */
 /* Definition of peripheral ID */
 #define LPSPI0_PERIPHERAL LPSPI0
 /* Definition of clock source */
 #define LPSPI0_CLOCK_FREQ CLOCK_GetIpFreq(kCLOCK_Lpspi0)
+/* LPSPI0 eDMA source request. */
+#define LPSPI0_RX_DMA_REQUEST kDmaRequestLPSPI0Rx
+/* Selected eDMA channel number. */
+#define LPSPI0_RX_DMA_CHANNEL 0
+/* Used DMA device. */
+#define LPSPI0_RX_DMA_BASEADDR DMA0
+/* LPSPI0 eDMA source request. */
+#define LPSPI0_TX_DMA_REQUEST kDmaRequestLPSPI0Tx
+/* Selected eDMA channel number. */
+#define LPSPI0_TX_DMA_CHANNEL 1
+/* Used DMA device. */
+#define LPSPI0_TX_DMA_BASEADDR DMA0
 
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
+extern const edma_config_t DMA0_config;
 extern const lpspi_master_config_t LPSPI0_config;
+extern edma_handle_t LPSPI0_RX_Handle;
+extern edma_handle_t LPSPI0_TX_Handle;
+extern lpspi_master_edma_handle_t LPSPI0_handle;
 
 /***********************************************************************************************************************
  * Initialization functions

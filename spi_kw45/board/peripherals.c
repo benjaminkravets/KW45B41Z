@@ -55,6 +55,46 @@ component:
  * BOARD_InitPeripherals functional group
  **********************************************************************************************************************/
 /***********************************************************************************************************************
+ * DMA0 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'DMA0'
+- type: 'dma3'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'dma3_935613750389296f2fe5ef032de60db8'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'DMA0'
+- config_sets:
+  - config:
+    - common_settings:
+      - vars: []
+      - enableMasterIdReplication: 'true'
+      - enableHaltOnError: 'true'
+      - enableRoundRobinArbitration: 'fixedPriority'
+      - enableDebugMode: 'false'
+      - globalChannelLink: 'enable'
+    - dma_table:
+      - 0: []
+      - 1: []
+    - edma_channels: []
+    - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const edma_config_t DMA0_config = {
+  .enableMasterIdReplication = true,
+  .enableHaltOnError = true,
+  .enableRoundRobinArbitration = false,
+  .enableDebugMode = false
+};
+
+/* Empty initialization function (commented out)
+static void DMA0_init(void) {
+} */
+
+/***********************************************************************************************************************
  * NVIC initialization code
  **********************************************************************************************************************/
 /* clang-format off */
@@ -86,7 +126,7 @@ static void NVIC_init(void) {
 instance:
 - name: 'LPSPI0'
 - type: 'lpspi'
-- mode: 'polling'
+- mode: 'edma'
 - custom_name_enabled: 'false'
 - type_id: 'lpspi_6e21a1e0a09f0a012d683c4f91752db8'
 - functional_group: 'BOARD_InitPeripherals'
@@ -109,16 +149,43 @@ instance:
       - pcsActiveHighOrLow: 'kLPSPI_PcsActiveLow'
       - pinCfg: 'kLPSPI_SdiInSdoOut'
       - dataOutConfig: 'kLpspiDataOutRetained'
-      - enableInputDelay: 'true'
-    - set_FifoWaterMarks: 'false'
-    - fifoWaterMarks:
-      - txWatermark: '0'
-      - rxWatermark: '0'
+      - enableInputDelay: 'false'
     - allPcsPolarityEnable: 'false'
     - allPcsPolarity:
       - kLPSPI_Pcs1Active: 'kLPSPI_PcsActiveLow'
       - kLPSPI_Pcs2Active: 'kLPSPI_PcsActiveLow'
       - kLPSPI_Pcs3Active: 'kLPSPI_PcsActiveLow'
+  - edma:
+    - channels:
+      - enableReceive: 'true'
+      - receive:
+        - uid: '1714696349024'
+        - eDMAn: '0'
+        - eDMA_source: 'kDmaRequestLPSPI0Rx'
+        - init_channel_priority: 'false'
+        - edma_channel_Preemption:
+          - enableChannelPreemption: 'false'
+          - enablePreemptAbility: 'false'
+          - arbitrationGroup: '0'
+          - channelPriority: '0'
+        - enable_custom_name: 'false'
+      - enableTransmit: 'true'
+      - transmit:
+        - uid: '1714696349025'
+        - eDMAn: '1'
+        - eDMA_source: 'kDmaRequestLPSPI0Tx'
+        - init_channel_priority: 'false'
+        - edma_channel_Preemption:
+          - enableChannelPreemption: 'false'
+          - enablePreemptAbility: 'false'
+          - arbitrationGroup: '0'
+          - channelPriority: '0'
+        - enable_custom_name: 'false'
+    - transfer:
+      - callback:
+        - name: ''
+        - userData: ''
+    - quick_selection: 'qs_edma'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const lpspi_master_config_t LPSPI0_config = {
@@ -134,13 +201,23 @@ const lpspi_master_config_t LPSPI0_config = {
   .pcsActiveHighOrLow = kLPSPI_PcsActiveLow,
   .pinCfg = kLPSPI_SdiInSdoOut,
   .dataOutConfig = kLpspiDataOutRetained,
-#if defined(FSL_LPSPI_DRIVER_VERSION) && (FSL_LPSPI_DRIVER_VERSION >= (MAKE_VERSION(2, 3, 0)))
-  .enableInputDelay = true,
-#endif
+
 };
+edma_handle_t LPSPI0_RX_Handle;
+edma_handle_t LPSPI0_TX_Handle;
+lpspi_master_edma_handle_t LPSPI0_handle;
 
 static void LPSPI0_init(void) {
   LPSPI_MasterInit(LPSPI0_PERIPHERAL, &LPSPI0_config, LPSPI0_CLOCK_FREQ);
+  /* Set the kDmaRequestLPSPI0Rx request */
+  EDMA_SetChannelMux(LPSPI0_RX_DMA_BASEADDR, LPSPI0_RX_DMA_CHANNEL, LPSPI0_RX_DMA_REQUEST);
+  /* Set the kDmaRequestLPSPI0Tx request */
+  EDMA_SetChannelMux(LPSPI0_TX_DMA_BASEADDR, LPSPI0_TX_DMA_CHANNEL, LPSPI0_TX_DMA_REQUEST);
+  /* Create the eDMA LPSPI0_RX_Handle handle */
+  EDMA_CreateHandle(&LPSPI0_RX_Handle, LPSPI0_RX_DMA_BASEADDR, LPSPI0_RX_DMA_CHANNEL);
+  /* Create the eDMA LPSPI0_TX_Handle handle */
+  EDMA_CreateHandle(&LPSPI0_TX_Handle, LPSPI0_TX_DMA_BASEADDR, LPSPI0_TX_DMA_CHANNEL);
+  LPSPI_MasterTransferCreateHandleEDMA(LPSPI0_PERIPHERAL, &LPSPI0_handle, NULL, NULL, &LPSPI0_RX_Handle, &LPSPI0_TX_Handle);
 }
 
 /***********************************************************************************************************************
@@ -148,6 +225,9 @@ static void LPSPI0_init(void) {
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
+  /* Global initialization */
+  EDMA_Init(DMA0_DMA_BASEADDR, &DMA0_config);
+
   /* Initialize components */
   LPSPI0_init();
 }
