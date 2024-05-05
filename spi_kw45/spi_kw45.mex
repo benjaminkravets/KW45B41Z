@@ -84,13 +84,28 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
+                  <dependency resourceType="Peripheral" resourceId="LPSPI0" description="Peripheral LPSPI0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="cm33">
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="Pins initialization requires the PORT Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="cm33">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                </dependencies>
-               <pins/>
+               <pins>
+                  <pin peripheral="LPSPI0" signal="PCS0" pin_num="11" pin_signal="ADC0_A12/PTA16/RF_NOT_ALLOWED/LPSPI0_PCS0/EWM0_OUT_b/LPI2C0_SCLS/TPM0_CH4/LPUART0_RX/RF_GPO_8/FLEXIO0_D5"/>
+                  <pin peripheral="LPSPI0" signal="IN" pin_num="12" pin_signal="ADC0_A13/PTA17/WUU0_P3/RF_NOT_ALLOWED/LPSPI0_SIN/EWM0_IN/LPI2C0_SDAS/TPM0_CH5/LPUART0_TX/RF_GPO_7/RF_GPO_8/FLEXIO0_D6"/>
+                  <pin peripheral="LPSPI0" signal="OUT" pin_num="13" pin_signal="CMP1_IN1/PTA18/LPSPI0_SOUT/LPUART0_CTS_b/LPI2C0_SDA/TPM0_CH3/RF_GPO_0/LPUART0_RX"/>
+                  <pin peripheral="LPSPI0" signal="SCK" pin_num="14" pin_signal="CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1"/>
+               </pins>
             </function>
             <function name="BOARD_InitLEDsPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
@@ -730,7 +745,7 @@
                         <struct name="channels">
                            <setting name="enableReceive" value="true"/>
                            <struct name="receive">
-                              <setting name="uid" value="1714696349024"/>
+                              <setting name="uid" value="1714776302092"/>
                               <setting name="eDMAn" value="0"/>
                               <setting name="eDMA_source" value="kDmaRequestLPSPI0Rx"/>
                               <setting name="init_channel_priority" value="false"/>
@@ -744,7 +759,7 @@
                            </struct>
                            <setting name="enableTransmit" value="true"/>
                            <struct name="transmit">
-                              <setting name="uid" value="1714696349025"/>
+                              <setting name="uid" value="1714776302105"/>
                               <setting name="eDMAn" value="1"/>
                               <setting name="eDMA_source" value="kDmaRequestLPSPI0Tx"/>
                               <setting name="init_channel_priority" value="false"/>

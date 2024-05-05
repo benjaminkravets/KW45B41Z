@@ -19,7 +19,9 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
+#define TRANSFER_SIZE 64U
 
+uint8_t master_transfer_data[TRANSFER_SIZE];
 /*
  * @brief   Application entry point.
  */
@@ -29,12 +31,22 @@ int main(void) {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
+
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
     /* Init FSL debug console. */
     BOARD_InitDebugConsole();
 #endif
 
+    for (uint8_t j = 0; j < TRANSFER_SIZE; j++){
+    	master_transfer_data[j] = j;
+    }
 
+    lpspi_transfer_t master_transfer;
+
+    master_transfer.txData = master_transfer_data;
+    master_transfer.rxData = NULL;
+    master_transfer.dataSize = TRANSFER_SIZE;
+    master_transfer.configFlags = kLPSPI_MasterPcs0 | kLPSPI_MasterByteSwap | kLPSPI_MasterPcsContinuous;
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
@@ -42,6 +54,7 @@ int main(void) {
     while(1){
         GETCHAR();
         PRINTF("Hello World\r\n");
+        //LPSPI_MasterTransferEDMA(LPSPI0, &LPSPI0_config, &master_transfer);
 
     }
     while(1) {

@@ -93,7 +93,11 @@ void BOARD_InitBootPins(void)
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: cm33, enableClock: 'true'}
-- pin_list: []
+- pin_list:
+  - {pin_num: '11', peripheral: LPSPI0, signal: PCS0, pin_signal: ADC0_A12/PTA16/RF_NOT_ALLOWED/LPSPI0_PCS0/EWM0_OUT_b/LPI2C0_SCLS/TPM0_CH4/LPUART0_RX/RF_GPO_8/FLEXIO0_D5}
+  - {pin_num: '12', peripheral: LPSPI0, signal: IN, pin_signal: ADC0_A13/PTA17/WUU0_P3/RF_NOT_ALLOWED/LPSPI0_SIN/EWM0_IN/LPI2C0_SDAS/TPM0_CH5/LPUART0_TX/RF_GPO_7/RF_GPO_8/FLEXIO0_D6}
+  - {pin_num: '13', peripheral: LPSPI0, signal: OUT, pin_signal: CMP1_IN1/PTA18/LPSPI0_SOUT/LPUART0_CTS_b/LPI2C0_SDA/TPM0_CH3/RF_GPO_0/LPUART0_RX}
+  - {pin_num: '14', peripheral: LPSPI0, signal: SCK, pin_signal: CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -106,6 +110,20 @@ BOARD_InitPins:
  * END ****************************************************************************************************************/
 void BOARD_InitPins(void)
 {
+    /* Clock Configuration: Peripheral clocks are enabled; module does not stall low power mode entry */
+    CLOCK_EnableClock(kCLOCK_PortA);
+
+    /* PORTA16 (pin 11) is configured as LPSPI0_PCS0 */
+    PORT_SetPinMux(PORTA, 16U, kPORT_MuxAlt2);
+
+    /* PORTA17 (pin 12) is configured as LPSPI0_SIN */
+    PORT_SetPinMux(PORTA, 17U, kPORT_MuxAlt2);
+
+    /* PORTA18 (pin 13) is configured as LPSPI0_SOUT */
+    PORT_SetPinMux(PORTA, 18U, kPORT_MuxAlt2);
+
+    /* PORTA19 (pin 14) is configured as LPSPI0_SCK */
+    PORT_SetPinMux(PORTA, 19U, kPORT_MuxAlt2);
 }
 
 /* clang-format off */

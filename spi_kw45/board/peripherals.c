@@ -159,7 +159,7 @@ instance:
     - channels:
       - enableReceive: 'true'
       - receive:
-        - uid: '1714696349024'
+        - uid: '1714776302092'
         - eDMAn: '0'
         - eDMA_source: 'kDmaRequestLPSPI0Rx'
         - init_channel_priority: 'false'
@@ -171,7 +171,7 @@ instance:
         - enable_custom_name: 'false'
       - enableTransmit: 'true'
       - transmit:
-        - uid: '1714696349025'
+        - uid: '1714776302105'
         - eDMAn: '1'
         - eDMA_source: 'kDmaRequestLPSPI0Tx'
         - init_channel_priority: 'false'
@@ -201,7 +201,9 @@ const lpspi_master_config_t LPSPI0_config = {
   .pcsActiveHighOrLow = kLPSPI_PcsActiveLow,
   .pinCfg = kLPSPI_SdiInSdoOut,
   .dataOutConfig = kLpspiDataOutRetained,
-
+//#if defined(FSL_LPSPI_DRIVER_VERSION) && (FSL_LPSPI_DRIVER_VERSION >= (MAKE_VERSION(2, 3, 0)))
+//  .enableInputDelay = false,
+//#endif
 };
 edma_handle_t LPSPI0_RX_Handle;
 edma_handle_t LPSPI0_TX_Handle;
