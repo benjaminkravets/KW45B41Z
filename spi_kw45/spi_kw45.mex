@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="b9b4c2b9-c826-40c3-bddc-3464d5aac97e" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="88877ac0-c917-4e7e-bca6-89718b4d19f1" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>KW45B41Z83xxxA</processor>
       <package>KW45B41Z83AFTA</package>
@@ -598,7 +598,7 @@
                   <clock_output id="CPU_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="FIRC_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="FRO16K_CLK.outFreq" value="16 kHz" locked="false" accuracy=""/>
-                  <clock_output id="MRCC.MRCC_LPSPI0_CLK.outFreq" value="32/3 MHz" locked="false" accuracy=""/>
+                  <clock_output id="MRCC.MRCC_LPSPI0_CLK.outFreq" value="6 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_CLK.outFreq" value="32 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_FRODIV_CLK.outFreq" value="16 MHz" locked="false" accuracy=""/>
                   <clock_output id="ROSC_CLK.outFreq" value="32.768 kHz" locked="false" accuracy=""/>
@@ -617,7 +617,7 @@
                   <setting id="CCM32K_OSC32K_CTRL_EXTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_OSC_EN_CFG" value="Enabled" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_XTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
-                  <setting id="MRCC.MRCC_LPSPI0_DIV.scale" value="9" locked="false"/>
+                  <setting id="MRCC.MRCC_LPSPI0_DIV.scale" value="16" locked="true"/>
                   <setting id="MRCC.MRCC_LPSPI0_SEL.sel" value="SCG.FIRC_CLK" locked="false"/>
                   <setting id="SCG.DIVCORE.scale" value="1" locked="true"/>
                   <setting id="SCG.DIVSLOW.scale" value="4" locked="true"/>
@@ -646,16 +646,6 @@
             <dependency resourceType="SWComponent" resourceId="platform.drivers.lpspi" description="An unsupported version of the LPSPI Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
                <feature name="version" evaluation="greaterOrEqual">
                   <data type="Version" maxValue="2.5.9">2.0.3</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.dma3" description="EDMA Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
-               <feature name="enabled" evaluation="equal">
-                  <data type="Boolean">true</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.dma3" description="An unsupported version of the EDMA Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="equivalent">
-                  <data type="Version">2.2.0</data>
                </feature>
             </dependency>
             <dependency resourceType="Tool" resourceId="Clocks" description="The Clocks tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
@@ -696,26 +686,16 @@
                         <data type="Frequency" unit="Hz">0</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpspi_edma" description="The fsl_lpspi_edma driver is missing in the project  (required for the DMA mode)." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="enabled" evaluation="equal">
-                        <data type="Boolean">true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpspi_edma" description="The compatible version of the fsl_lpspi_edma driver is not available in the project  (required for the DMA mode)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="version" evaluation="compatible">
-                        <data type="Version">2.0.2</data>
-                     </feature>
-                  </dependency>
                </dependencies>
                <instances>
-                  <instance name="NVIC" uuid="d9e1b097-2b26-43ef-964e-2925ad71822c" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="c955cb5b-6e01-4925-a56e-f187f762477a" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table"/>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
-                  <instance name="LPSPI0" uuid="6c0cdac6-2f3d-4092-89d6-5b552efc3265" type="lpspi" type_id="lpspi_6e21a1e0a09f0a012d683c4f91752db8" mode="edma" peripheral="LPSPI0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="main">
+                  <instance name="LPSPI0" uuid="4fd35560-0a76-4c32-8bac-fbcb7343f889" type="lpspi" type_id="lpspi_6e21a1e0a09f0a012d683c4f91752db8" mode="polling" peripheral="LPSPI0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="main" quick_selection="qs_master">
                         <setting name="mode" value="kLPSPI_Master"/>
                         <setting name="clockSource" value="LpspiClock"/>
                         <setting name="clockSourceFreq" value="GetIpFreq"/>
@@ -734,6 +714,11 @@
                            <setting name="dataOutConfig" value="kLpspiDataOutRetained"/>
                            <setting name="enableInputDelay" value="false"/>
                         </struct>
+                        <setting name="set_FifoWaterMarks" value="false"/>
+                        <struct name="fifoWaterMarks">
+                           <setting name="txWatermark" value="0"/>
+                           <setting name="rxWatermark" value="0"/>
+                        </struct>
                         <setting name="allPcsPolarityEnable" value="false"/>
                         <struct name="allPcsPolarity">
                            <setting name="kLPSPI_Pcs1Active" value="kLPSPI_PcsActiveLow"/>
@@ -741,89 +726,34 @@
                            <setting name="kLPSPI_Pcs3Active" value="kLPSPI_PcsActiveLow"/>
                         </struct>
                      </config_set>
-                     <config_set name="edma" quick_selection="qs_edma">
-                        <struct name="channels">
-                           <setting name="enableReceive" value="true"/>
-                           <struct name="receive">
-                              <setting name="uid" value="1714776302092"/>
-                              <setting name="eDMAn" value="0"/>
-                              <setting name="eDMA_source" value="kDmaRequestLPSPI0Rx"/>
-                              <setting name="init_channel_priority" value="false"/>
-                              <struct name="edma_channel_Preemption">
-                                 <setting name="enableChannelPreemption" value="false"/>
-                                 <setting name="enablePreemptAbility" value="false"/>
-                                 <setting name="arbitrationGroup" value="0"/>
-                                 <setting name="channelPriority" value="0"/>
-                              </struct>
-                              <setting name="enable_custom_name" value="false"/>
-                           </struct>
-                           <setting name="enableTransmit" value="true"/>
-                           <struct name="transmit">
-                              <setting name="uid" value="1714776302105"/>
-                              <setting name="eDMAn" value="1"/>
-                              <setting name="eDMA_source" value="kDmaRequestLPSPI0Tx"/>
-                              <setting name="init_channel_priority" value="false"/>
-                              <struct name="edma_channel_Preemption">
-                                 <setting name="enableChannelPreemption" value="false"/>
-                                 <setting name="enablePreemptAbility" value="false"/>
-                                 <setting name="arbitrationGroup" value="0"/>
-                                 <setting name="channelPriority" value="0"/>
-                              </struct>
-                              <setting name="enable_custom_name" value="false"/>
-                           </struct>
-                        </struct>
-                        <struct name="transfer">
-                           <struct name="callback">
-                              <setting name="name" value=""/>
-                              <setting name="userData" value=""/>
-                           </struct>
-                        </struct>
-                     </config_set>
-                  </instance>
-                  <instance name="DMA0" uuid="4437016c-7708-4414-848e-2dfe7a0ca13e" type="dma3" type_id="dma3_935613750389296f2fe5ef032de60db8" mode="general" peripheral="DMA0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="config" quick_selection="default">
-                        <struct name="common_settings">
-                           <struct name="vars"/>
-                           <setting name="enableMasterIdReplication" value="true"/>
-                           <setting name="enableHaltOnError" value="true"/>
-                           <setting name="enableRoundRobinArbitration" value="fixedPriority"/>
-                           <setting name="enableDebugMode" value="false"/>
-                           <setting name="globalChannelLink" value="enable"/>
-                        </struct>
-                        <array name="dma_table">
-                           <struct name="0"/>
-                           <struct name="1"/>
-                        </array>
-                        <array name="edma_channels"/>
-                     </config_set>
                   </instance>
                </instances>
             </functional_group>
          </functional_groups>
          <components>
-            <component name="system" uuid="3d91637c-3ca0-4f7e-9b63-3bd342a61b5b" type_id="system_54b53072540eeeb8f8e9343e71f28176">
+            <component name="system" uuid="58ba596c-0c4b-4602-a5d9-1c1e3f6116d9" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions">
                   <setting name="user_definitions" value=""/>
                   <setting name="user_includes" value=""/>
                   <setting name="global_init" value=""/>
                </config_set_global>
             </component>
-            <component name="uart_cmsis_common" uuid="70b12a00-2953-41a0-be1e-4e42e7a201b2" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
+            <component name="uart_cmsis_common" uuid="0752c938-3a20-454d-980a-30d12fa33516" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
                <config_set_global name="global_USART_CMSIS_common" quick_selection="default"/>
             </component>
-            <component name="gpio_adapter_common" uuid="b2434a81-1822-4194-aa99-98f832079b9a" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
+            <component name="gpio_adapter_common" uuid="51ed699f-ad56-4c72-8723-9899c202dc47" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
                <config_set_global name="global_gpio_adapter_common" quick_selection="default"/>
             </component>
-            <component name="msg" uuid="f56edfe0-ee5f-4487-9215-661db0a0f050" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="e2b6f1a2-8193-4ed8-91e7-c34223e10f20" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
-            <component name="generic_uart" uuid="613acda6-79fd-48bc-94d9-a7b2c9d61f52" type_id="generic_uart_8cae00565451cf2346eb1b8c624e73a6">
+            <component name="generic_uart" uuid="36465e41-e56a-4e58-9e5e-89df8757dfb5" type_id="generic_uart_8cae00565451cf2346eb1b8c624e73a6">
                <config_set_global name="global_uart"/>
             </component>
-            <component name="generic_enet" uuid="ac3aefa2-0df5-45ba-8f3e-c5db52743277" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
+            <component name="generic_enet" uuid="abc2ba20-2541-46c7-97ce-5184f149c1da" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
                <config_set_global name="global_enet"/>
             </component>
-            <component name="generic_can" uuid="a297478c-96f7-4a71-b83a-29ff9e8d2485" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
+            <component name="generic_can" uuid="89988f4b-6dce-405e-9e1e-c0a8bd1be675" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
                <config_set_global name="global_can"/>
             </component>
          </components>

@@ -21,7 +21,7 @@
 /* TODO: insert other definitions and declarations here. */
 #define TRANSFER_SIZE 64U
 
-uint8_t master_transfer_data[TRANSFER_SIZE];
+AT_NONCACHEABLE_SECTION_INIT(uint8_t master_transfer_data[TRANSFER_SIZE]) = {0};
 /*
  * @brief   Application entry point.
  */
@@ -48,13 +48,16 @@ int main(void) {
     master_transfer.dataSize = TRANSFER_SIZE;
     master_transfer.configFlags = kLPSPI_MasterPcs0 | kLPSPI_MasterByteSwap | kLPSPI_MasterPcsContinuous;
 
+    uint8_t lpspi_return = 0;
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     while(1){
         GETCHAR();
         PRINTF("Hello World\r\n");
-        //LPSPI_MasterTransferEDMA(LPSPI0, &LPSPI0_config, &master_transfer);
+        //uint8_t ret = LPSPI_MasterTransferEDMA(LPSPI0, &LPSPI0_config, &master_transfer);
+        lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
+        PRINTF("%i \r\n", lpspi_return);
 
     }
     while(1) {
