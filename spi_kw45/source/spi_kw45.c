@@ -37,25 +37,29 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    for (uint8_t j = 0; j < TRANSFER_SIZE; j++){
-    	master_transfer_data[j] = j;
-    }
+
 
     lpspi_transfer_t master_transfer;
 
-    master_transfer.txData = master_transfer_data;
-    master_transfer.rxData = NULL;
-    master_transfer.dataSize = TRANSFER_SIZE;
-    master_transfer.configFlags = kLPSPI_MasterPcs0 | kLPSPI_MasterByteSwap | kLPSPI_MasterPcsContinuous;
+
+    master_transfer.configFlags = kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous | kLPSPI_MasterByteSwap ;
 
     uint8_t lpspi_return = 0;
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     while(1){
+
+        for (uint8_t j = 0; j < TRANSFER_SIZE; j++){
+        	master_transfer_data[j] = j;
+        }
+
         GETCHAR();
         PRINTF("Hello World\r\n");
         //uint8_t ret = LPSPI_MasterTransferEDMA(LPSPI0, &LPSPI0_config, &master_transfer);
+        master_transfer.txData = master_transfer_data;
+        master_transfer.rxData = NULL;
+        master_transfer.dataSize = TRANSFER_SIZE;
         lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
         PRINTF("%i \r\n", lpspi_return);
 
