@@ -22,6 +22,7 @@
 #define TRANSFER_SIZE 64U
 
 AT_NONCACHEABLE_SECTION_INIT(uint8_t master_transfer_data[TRANSFER_SIZE]) = {0};
+
 /*
  * @brief   Application entry point.
  */
@@ -62,6 +63,15 @@ int main(void) {
         master_transfer.dataSize = TRANSFER_SIZE;
         lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
         PRINTF("%i \r\n", lpspi_return);
+
+        if (1) {
+        	master_transfer.txData = NULL;
+        	master_transfer.rxData = master_transfer_data;
+        	master_transfer.dataSize = TRANSFER_SIZE;
+            lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
+
+
+        }
 
     }
     while(1) {
