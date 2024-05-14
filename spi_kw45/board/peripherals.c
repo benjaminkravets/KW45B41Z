@@ -135,9 +135,7 @@ const lpspi_master_config_t LPSPI0_config = {
   .pcsActiveHighOrLow = kLPSPI_PcsActiveLow,
   .pinCfg = kLPSPI_SdiInSdoOut,
   .dataOutConfig = kLpspiDataOutRetained,
-//#if defined(FSL_LPSPI_DRIVER_VERSION) && (FSL_LPSPI_DRIVER_VERSION >= (MAKE_VERSION(2, 3, 0)))
-//  .enableInputDelay = false,
-//#endif
+
 };
 
 static void LPSPI0_init(void) {

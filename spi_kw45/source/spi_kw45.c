@@ -22,10 +22,19 @@
 #define TRANSFER_SIZE 64U
 
 AT_NONCACHEABLE_SECTION_INIT(uint8_t master_transfer_data[TRANSFER_SIZE]) = {0};
-
+volatile uint32_t g_systickCounter = 20;
 /*
  * @brief   Application entry point.
  */
+
+void SysTick_Handler(void)
+{
+    if (g_systickCounter != 0U)
+    {
+        g_systickCounter--;
+    }
+}
+
 int main(void) {
 
     /* Init board hardware. */
@@ -64,14 +73,12 @@ int main(void) {
         lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
         PRINTF("%i \r\n", lpspi_return);
 
-        if (1) {
-        	master_transfer.txData = NULL;
-        	master_transfer.rxData = master_transfer_data;
-        	master_transfer.dataSize = TRANSFER_SIZE;
-            lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
 
+		master_transfer.txData = NULL;
+		master_transfer.rxData = master_transfer_data;
+		master_transfer.dataSize = TRANSFER_SIZE;
+		lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
 
-        }
 
     }
     while(1) {
