@@ -695,7 +695,7 @@
                      </config_set>
                   </instance>
                   <instance name="LPSPI0" uuid="4fd35560-0a76-4c32-8bac-fbcb7343f889" type="lpspi" type_id="lpspi_6e21a1e0a09f0a012d683c4f91752db8" mode="polling" peripheral="LPSPI0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="main" quick_selection="qs_master">
+                     <config_set name="main">
                         <setting name="mode" value="kLPSPI_Master"/>
                         <setting name="clockSource" value="LpspiClock"/>
                         <setting name="clockSourceFreq" value="GetIpFreq"/>

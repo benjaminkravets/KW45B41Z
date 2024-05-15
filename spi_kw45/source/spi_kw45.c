@@ -27,13 +27,6 @@ volatile uint32_t g_systickCounter = 20;
  * @brief   Application entry point.
  */
 
-void SysTick_Handler(void)
-{
-    if (g_systickCounter != 0U)
-    {
-        g_systickCounter--;
-    }
-}
 
 int main(void) {
 
@@ -47,6 +40,7 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
+    uint32_t transmission_count = 0;
 
 
     lpspi_transfer_t master_transfer;
@@ -61,8 +55,9 @@ int main(void) {
     while(1){
 
         for (uint8_t j = 0; j < TRANSFER_SIZE; j++){
-        	master_transfer_data[j] = j;
+        	master_transfer_data[j] = j + transmission_count;
         }
+        transmission_count += 1;
 
         GETCHAR();
         PRINTF("Hello World\r\n");
