@@ -22,7 +22,7 @@
 #define TRANSFER_SIZE 64U
 
 AT_NONCACHEABLE_SECTION_INIT(uint8_t master_transfer_data[TRANSFER_SIZE]) = {0};
-volatile uint32_t g_systickCounter = 20;
+
 /*
  * @brief   Application entry point.
  */
@@ -60,7 +60,7 @@ int main(void) {
         transmission_count += 1;
 
         GETCHAR();
-        PRINTF("Hello World\r\n");
+
         //uint8_t ret = LPSPI_MasterTransferEDMA(LPSPI0, &LPSPI0_config, &master_transfer);
         master_transfer.txData = master_transfer_data;
         master_transfer.rxData = NULL;
@@ -68,12 +68,23 @@ int main(void) {
         lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
         PRINTF("%i \r\n", lpspi_return);
 
+        PRINTF("\r\n Sent: ");
+
+        for(uint8_t i = 0; i < TRANSFER_SIZE; i++){
+        	PRINTF("%i ", master_transfer_data[i]);
+        }
+
 
 		master_transfer.txData = NULL;
 		master_transfer.rxData = master_transfer_data;
 		master_transfer.dataSize = TRANSFER_SIZE;
 		lpspi_return = LPSPI_MasterTransferBlocking(LPSPI0, &master_transfer);
 
+        PRINTF("\r\n Received: ");
+
+        for(uint8_t i = 0; i < TRANSFER_SIZE; i++){
+        	PRINTF("%i ", master_transfer_data[i]);
+        }
 
     }
     while(1) {
