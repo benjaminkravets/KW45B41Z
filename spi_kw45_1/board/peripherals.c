@@ -184,7 +184,7 @@ instance:
         - enable_custom_name: 'false'
     - transfer:
       - callback:
-        - name: ''
+        - name: 'spi_transfer_complete'
         - userData: ''
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -201,9 +201,7 @@ const lpspi_master_config_t LPSPI0_config = {
   .pcsActiveHighOrLow = kLPSPI_PcsActiveLow,
   .pinCfg = kLPSPI_SdiInSdoOut,
   .dataOutConfig = kLpspiDataOutRetained,
-#if defined(FSL_LPSPI_DRIVER_VERSION) && (FSL_LPSPI_DRIVER_VERSION >= (MAKE_VERSION(2, 3, 0)))
-  .enableInputDelay = false,
-#endif
+
 };
 edma_handle_t LPSPI0_RX_Handle;
 edma_handle_t LPSPI0_TX_Handle;
@@ -219,7 +217,7 @@ static void LPSPI0_init(void) {
   EDMA_CreateHandle(&LPSPI0_RX_Handle, LPSPI0_RX_DMA_BASEADDR, LPSPI0_RX_DMA_CHANNEL);
   /* Create the eDMA LPSPI0_TX_Handle handle */
   EDMA_CreateHandle(&LPSPI0_TX_Handle, LPSPI0_TX_DMA_BASEADDR, LPSPI0_TX_DMA_CHANNEL);
-  LPSPI_MasterTransferCreateHandleEDMA(LPSPI0_PERIPHERAL, &LPSPI0_handle, NULL, NULL, &LPSPI0_RX_Handle, &LPSPI0_TX_Handle);
+  LPSPI_MasterTransferCreateHandleEDMA(LPSPI0_PERIPHERAL, &LPSPI0_handle, spi_transfer_complete, NULL, &LPSPI0_RX_Handle, &LPSPI0_TX_Handle);
 }
 
 /***********************************************************************************************************************

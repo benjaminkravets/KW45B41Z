@@ -53,6 +53,12 @@ extern edma_handle_t LPSPI0_TX_Handle;
 extern lpspi_master_edma_handle_t LPSPI0_handle;
 
 /***********************************************************************************************************************
+ * Callback functions
+ **********************************************************************************************************************/
+/* Master transfer callback function for component LPSPI0*/
+extern void spi_transfer_complete(LPSPI_Type *base, lpspi_master_edma_handle_t *handle, status_t status, void *userData);
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 

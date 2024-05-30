@@ -775,7 +775,7 @@
                         </struct>
                         <struct name="transfer">
                            <struct name="callback">
-                              <setting name="name" value=""/>
+                              <setting name="name" value="spi_transfer_complete"/>
                               <setting name="userData" value=""/>
                            </struct>
                         </struct>
