@@ -42,17 +42,18 @@ void spi_transfer_complete(LPSPI_Type *base, lpspi_master_edma_handle_t *handle,
 {
 	if (status == kStatus_Success)
 	{
+		PRINTF("\r\n SPI transfer successful \r\n");
 		xSemaphoreGive(edma_transfer_complete);
 
-		PRINTF(
-			"This is LPSPI master edma transfer completed callback. \r\n\r\n");
 	}
 }
 static void spi_handler_entry(void *argument)
 {
 
 	uint32_t transmission_count = 0;
-	lpspi_transfer_t master_transfer;
+	lpspi_transfer_t master_transfer; //spi transfer handle, defines tx/rx buffer, data size, and settings for CS, etc.
+	master_transfer.configFlags = kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous | kLPSPI_MasterByteSwap;
+	master_transfer.dataSize = TRANSFER_SIZE;
 
 	while (1)
 	{
@@ -63,16 +64,16 @@ static void spi_handler_entry(void *argument)
 		}
 		transmission_count += 1;
 
-		GETCHAR();
+		vTaskDelay(pdMS_TO_TICKS(1000));
 
 		master_transfer.txData = master_transfer_data;
 		master_transfer.rxData = NULL;
-		master_transfer.dataSize = TRANSFER_SIZE;
-		master_transfer.configFlags = kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous | kLPSPI_MasterByteSwap;
 
 		LPSPI_MasterTransferEDMA(LPSPI0, &LPSPI0_handle, &master_transfer);
 
 		xSemaphoreTake(edma_transfer_complete, pdMS_TO_TICKS(500));
+
+        PRINTF("\r\n Sent: ");
 
 		for (uint8_t z = 0; z < TRANSFER_SIZE; z++)
 		{
@@ -82,12 +83,12 @@ static void spi_handler_entry(void *argument)
 
 		master_transfer.rxData = master_receive_data;
 		master_transfer.txData = NULL;
-		master_transfer.dataSize = TRANSFER_SIZE;
-		master_transfer.configFlags = kLPSPI_MasterPcs0 | kLPSPI_MasterPcsContinuous | kLPSPI_MasterByteSwap;
 
 		LPSPI_MasterTransferEDMA(LPSPI0, &LPSPI0_handle, &master_transfer);
 
 		xSemaphoreTake(edma_transfer_complete, pdMS_TO_TICKS(500));
+
+        PRINTF("\r\n Received: ");
 
 		for (uint8_t z = 0; z < TRANSFER_SIZE; z++)
 		{
