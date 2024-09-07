@@ -686,7 +686,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_KW45B41Z-EVK</sdkName>
-		<sdkVersion>2.12.6</sdkVersion>
+		<sdkVersion>2.16.000</sdkVersion>
 		<sdkComponents>middleware.baremetal.KW45B41Z83;project_template.kw45b41zevk.KW45B41Z83;platform.devices.KW45B41Z83.KW45B41Z83;platform.drivers.port.KW45B41Z83;component.lists.KW45B41Z83;platform.drivers.gpio.KW45B41Z83;CMSIS_Include_core_cm.KW45B41Z83;platform.drivers.common.KW45B41Z83;platform.drivers.ccm32k.KW45B41Z83;component.serial_manager.KW45B41Z83;device.KW45B41Z83_system.KW45B41Z83;component.lpuart_adapter.KW45B41Z83;platform.drivers.clock.KW45B41Z83;utility.debug_console.KW45B41Z83;component.serial_manager_uart.KW45B41Z83;device.KW45B41Z83_CMSIS.KW45B41Z83;platform.drivers.lpuart.KW45B41Z83;platform.utilities.assert.KW45B41Z83;platform.drivers.spc.KW45B41Z83;middleware.freertos-kernel.KW45B41Z83;middleware.freertos-kernel.template.KW45B41Z83;middleware.freertos-kernel.extension.KW45B41Z83;platform.drivers.lpspi_edma.KW45B41Z83;platform.drivers.dma3.KW45B41Z83;platform.drivers.lpspi.KW45B41Z83;platform.drivers.lpspi_freertos.KW45B41Z83;</sdkComponents>
 		<boardId>kw45b41zevk</boardId>
 		<package>KW45B41Z83AFTA</package>

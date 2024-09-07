@@ -11,7 +11,7 @@ product: Pins v15.0
 processor: KW45B41Z83xxxA
 package_id: KW45B41Z83AFTA
 mcu_data: ksdk2_0
-processor_version: 15.0.0
+processor_version: 15.1.0
 board: KW45B41Z-EVK
 pin_labels:
 - {pin_num: '14', pin_signal: CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1, label: 'Q1[1]/J1[5]/LED_G/TPM0_CH2', identifier: LED_G;LED_GREEN}

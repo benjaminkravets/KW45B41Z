@@ -1,0 +1,5 @@
+
+
+flash using linkserver: 
+
+c:\nxp\LinkServer_1.4.85\LinkServer.exe flash KW45B41Z83xxxA:KW45B41Z-EVK load C:\Users\bakra\Desktop\KW45B41Z\timer_blink\Debug\timer_blink.axf

@@ -24,7 +24,7 @@
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>15.0.0</processor_version>
+            <processor_version>15.1.0</processor_version>
             <pin_labels>
                <pin_label pin_num="14" pin_signal="CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1" label="Q1[1]/J1[5]/LED_G/TPM0_CH2" identifier="LED_G;LED_GREEN"/>
                <pin_label pin_num="17" pin_signal="ADC0_A14/CMP0_IN3/PTA20/LPSPI0_PCS2/LPUART0_TX/EWM0_IN/TPM0_CH1/RF_GPO_2/FLEXIO0_D7" label="Q4[1]/J1[7]/LED_B/RF_GPO_2/TPM0_CH1" identifier="LED_B;LED_BLUE"/>
@@ -189,7 +189,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPUART1" description="Peripheral LPUART1 is not initialized" problem_level="1" source="Pins:BOARD_InitDEBUG_UARTPins">
+                  <dependency resourceType="Peripheral" resourceId="LPUART1" description="Peripheral LPUART1 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitDEBUG_UARTPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -291,7 +291,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="CAN0" description="Peripheral CAN0 is not initialized" problem_level="1" source="Pins:BOARD_InitCANPins">
+                  <dependency resourceType="Peripheral" resourceId="CAN0" description="Peripheral CAN0 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitCANPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -340,7 +340,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPSPI1" description="Peripheral LPSPI1 is not initialized" problem_level="1" source="Pins:BOARD_InitFlashPins">
+                  <dependency resourceType="Peripheral" resourceId="LPSPI1" description="Peripheral LPSPI1 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitFlashPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -425,7 +425,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPI2C1" description="Peripheral LPI2C1 is not initialized" problem_level="1" source="Pins:BOARD_InitACCELPins">
+                  <dependency resourceType="Peripheral" resourceId="LPI2C1" description="Peripheral LPI2C1 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitACCELPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -477,7 +477,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPUART0" description="Peripheral LPUART0 is not initialized" problem_level="1" source="Pins:BOARD_InitLINPins">
+                  <dependency resourceType="Peripheral" resourceId="LPUART0" description="Peripheral LPUART0 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitLINPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -540,49 +540,49 @@
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>15.0.0</processor_version>
+            <processor_version>15.1.0</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
                <description></description>
                <options/>
                <dependencies>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.EXTAL32K" description="&apos;EXTAL32K&apos; (Pins tool id: CCM32K.EXTAL32K, Clocks tool id: CCM32K.EXTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_extal" description="&apos;EXTAL32K&apos; (Pins tool id: RTC.rtc_extal, Clocks tool id: CCM32K.EXTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.EXTAL32K" description="&apos;EXTAL32K&apos; (Pins tool id: CCM32K.EXTAL32K, Clocks tool id: CCM32K.EXTAL32K) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_extal" description="&apos;EXTAL32K&apos; (Pins tool id: RTC.rtc_extal, Clocks tool id: CCM32K.EXTAL32K) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>INPUT</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.XTAL32K" description="&apos;XTAL32K&apos; (Pins tool id: CCM32K.XTAL32K, Clocks tool id: CCM32K.XTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_xtal" description="&apos;XTAL32K&apos; (Pins tool id: RTC.rtc_xtal, Clocks tool id: CCM32K.XTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.XTAL32K" description="&apos;XTAL32K&apos; (Pins tool id: CCM32K.XTAL32K, Clocks tool id: CCM32K.XTAL32K) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_xtal" description="&apos;XTAL32K&apos; (Pins tool id: RTC.rtc_xtal, Clocks tool id: CCM32K.XTAL32K) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>OUTPUT</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.EXTAL0" description="&apos;EXTAL0&apos; (Pins tool id: SCG.EXTAL0, Clocks tool id: SCG.EXTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.extal" description="&apos;EXTAL0&apos; (Pins tool id: SCG.extal, Clocks tool id: SCG.EXTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.EXTAL0" description="&apos;EXTAL0&apos; (Pins tool id: SCG.EXTAL0, Clocks tool id: SCG.EXTAL0) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.extal" description="&apos;EXTAL0&apos; (Pins tool id: SCG.extal, Clocks tool id: SCG.EXTAL0) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>INPUT</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.XTAL0" description="&apos;XTAL0&apos; (Pins tool id: SCG.XTAL0, Clocks tool id: SCG.XTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.xtal" description="&apos;XTAL0&apos; (Pins tool id: SCG.xtal, Clocks tool id: SCG.XTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.XTAL0" description="&apos;XTAL0&apos; (Pins tool id: SCG.XTAL0, Clocks tool id: SCG.XTAL0) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.xtal" description="&apos;XTAL0&apos; (Pins tool id: SCG.xtal, Clocks tool id: SCG.XTAL0) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>OUTPUT</data>
                      </feature>
@@ -656,16 +656,6 @@
                   <data type="Version" maxValue="2.1.9">2.0.0</data>
                </feature>
             </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpspi" description="LPSPI Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
-               <feature name="enabled" evaluation="equal">
-                  <data type="Boolean">true</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpspi" description="An unsupported version of the LPSPI Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="greaterOrEqual">
-                  <data type="Version" maxValue="2.5.9">2.0.3</data>
-               </feature>
-            </dependency>
             <dependency resourceType="Tool" resourceId="Pins" description="The Pins tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
                   <data>true</data>
@@ -682,7 +672,7 @@
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>15.0.0</processor_version>
+            <processor_version>15.1.0</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="b82e970b-aefd-4c28-bb14-af73e85818df" called_from_default_init="true" id_prefix="" core="cm33">
@@ -690,26 +680,6 @@
                <options/>
                <dependencies>
                   <dependency resourceType="ClockOutput" resourceId="MRCC.MRCC_LPIT0_CLK" description="LPIT0 clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="frequency" evaluation="greaterThan">
-                        <data type="Frequency" unit="Hz">0</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPSPI0.lpspi_sck" description="Signal serial clock is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="routed" evaluation="">
-                        <data type="Boolean">true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPSPI0.lpspi_sin" description="Signal serial data input is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="routed" evaluation="">
-                        <data type="Boolean">true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPSPI0.lpspi_sout" description="Signal serial data output is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="routed" evaluation="">
-                        <data type="Boolean">true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="ClockOutput" resourceId="MRCC.MRCC_LPSPI0_CLK" description="LPSPI0 clock is inactive." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="frequency" evaluation="greaterThan">
                         <data type="Frequency" unit="Hz">0</data>
                      </feature>
@@ -756,39 +726,6 @@
                            <setting name="enable_priority" value="false"/>
                            <setting name="priority" value="0"/>
                            <setting name="enable_custom_name" value="false"/>
-                        </struct>
-                     </config_set>
-                  </instance>
-                  <instance name="LPSPI0" uuid="62a88cd3-2fd2-4c1c-a37d-161f41ebe92e" type="lpspi" type_id="lpspi_6e21a1e0a09f0a012d683c4f91752db8" mode="polling" peripheral="LPSPI0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="main" quick_selection="qs_master">
-                        <setting name="mode" value="kLPSPI_Master"/>
-                        <setting name="clockSource" value="LpspiClock"/>
-                        <setting name="clockSourceFreq" value="GetIpFreq"/>
-                        <struct name="master">
-                           <setting name="baudRate" value="500000"/>
-                           <setting name="bitsPerFrame" value="8"/>
-                           <setting name="cpol" value="kLPSPI_ClockPolarityActiveHigh"/>
-                           <setting name="cpha" value="kLPSPI_ClockPhaseFirstEdge"/>
-                           <setting name="direction" value="kLPSPI_MsbFirst"/>
-                           <setting name="pcsToSckDelayInNanoSec" value="1000"/>
-                           <setting name="lastSckToPcsDelayInNanoSec" value="1000"/>
-                           <setting name="betweenTransferDelayInNanoSec" value="1000"/>
-                           <setting name="whichPcs" value="kLPSPI_Pcs0"/>
-                           <setting name="pcsActiveHighOrLow" value="kLPSPI_PcsActiveLow"/>
-                           <setting name="pinCfg" value="kLPSPI_SdiInSdoOut"/>
-                           <setting name="dataOutConfig" value="kLpspiDataOutRetained"/>
-                           <setting name="enableInputDelay" value="false"/>
-                        </struct>
-                        <setting name="set_FifoWaterMarks" value="false"/>
-                        <struct name="fifoWaterMarks">
-                           <setting name="txWatermark" value="0"/>
-                           <setting name="rxWatermark" value="0"/>
-                        </struct>
-                        <setting name="allPcsPolarityEnable" value="false"/>
-                        <struct name="allPcsPolarity">
-                           <setting name="kLPSPI_Pcs1Active" value="kLPSPI_PcsActiveLow"/>
-                           <setting name="kLPSPI_Pcs2Active" value="kLPSPI_PcsActiveLow"/>
-                           <setting name="kLPSPI_Pcs3Active" value="kLPSPI_PcsActiveLow"/>
                         </struct>
                      </config_set>
                   </instance>

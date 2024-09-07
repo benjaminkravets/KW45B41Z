@@ -24,7 +24,7 @@ product: Clocks v13.0
 processor: KW45B41Z83xxxA
 package_id: KW45B41Z83AFTA
 mcu_data: ksdk2_0
-processor_version: 15.0.0
+processor_version: 15.1.0
 board: KW45B41Z-EVK
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
