@@ -91,7 +91,7 @@
  * As same as the DEBUG_CONSOLE_BUFFER_PRINTF_MAX_LOG_LEN.
  */
 #ifndef DEBUG_CONSOLE_SCANF_MAX_LOG_LEN
-#define DEBUG_CONSOLE_SCANF_MAX_LOG_LEN (255U)
+#define DEBUG_CONSOLE_SCANF_MAX_LOG_LEN (20U)
 #endif /* DEBUG_CONSOLE_SCANF_MAX_LOG_LEN */
 
 /*! @brief Debug console synchronization

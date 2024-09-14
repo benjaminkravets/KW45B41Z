@@ -6,11 +6,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v14.0
+product: Peripherals v15.0
 processor: KW45B41Z83xxxA
 package_id: KW45B41Z83AFTA
 mcu_data: ksdk2_0
-processor_version: 15.1.0
+processor_version: 16.1.0
 board: KW45B41Z-EVK
 functionalGroups:
 - name: BOARD_InitPeripherals
@@ -64,7 +64,7 @@ instance:
 - type: 'nvic'
 - mode: 'general'
 - custom_name_enabled: 'false'
-- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- type_id: 'nvic'
 - functional_group: 'BOARD_InitPeripherals'
 - peripheral: 'NVIC'
 - config_sets:
@@ -79,11 +79,77 @@ static void NVIC_init(void) {
 } */
 
 /***********************************************************************************************************************
+ * LPSPI1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'LPSPI1'
+- type: 'lpspi'
+- mode: 'polling'
+- custom_name_enabled: 'false'
+- type_id: 'lpspi_2.6.0'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'LPSPI1'
+- config_sets:
+  - main:
+    - mode: 'kLPSPI_Master'
+    - clockSource: 'LpspiClock'
+    - clockSourceFreq: 'GetIpFreq'
+    - master:
+      - baudRate: '500000'
+      - bitsPerFrame: '8'
+      - cpol: 'kLPSPI_ClockPolarityActiveHigh'
+      - cpha: 'kLPSPI_ClockPhaseFirstEdge'
+      - direction: 'kLPSPI_MsbFirst'
+      - pcsToSckDelayInNanoSec: '1000'
+      - lastSckToPcsDelayInNanoSec: '1000'
+      - betweenTransferDelayInNanoSec: '1000'
+      - whichPcs: 'kLPSPI_Pcs3'
+      - pcsActiveHighOrLow: 'kLPSPI_PcsActiveLow'
+      - pinCfg: 'kLPSPI_SdiInSdoOut'
+      - pcsFunc: 'kLPSPI_PcsAsCs'
+      - dataOutConfig: 'kLpspiDataOutRetained'
+      - enableInputDelay: 'false'
+    - set_FifoWaterMarks: 'false'
+    - fifoWaterMarks:
+      - txWatermark: '0'
+      - rxWatermark: '0'
+    - allPcsPolarityEnable: 'false'
+    - allPcsPolarity:
+      - kLPSPI_Pcs0Active: 'kLPSPI_PcsActiveLow'
+      - kLPSPI_Pcs1Active: 'kLPSPI_PcsActiveLow'
+      - kLPSPI_Pcs2Active: 'kLPSPI_PcsActiveLow'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const lpspi_master_config_t LPSPI1_config = {
+  .baudRate = 500000UL,
+  .bitsPerFrame = 8UL,
+  .cpol = kLPSPI_ClockPolarityActiveHigh,
+  .cpha = kLPSPI_ClockPhaseFirstEdge,
+  .direction = kLPSPI_MsbFirst,
+  .pcsToSckDelayInNanoSec = 1000UL,
+  .lastSckToPcsDelayInNanoSec = 1000UL,
+  .betweenTransferDelayInNanoSec = 1000UL,
+  .whichPcs = kLPSPI_Pcs3,
+  .pcsActiveHighOrLow = kLPSPI_PcsActiveLow,
+  .pinCfg = kLPSPI_SdiInSdoOut,
+  .pcsFunc = kLPSPI_PcsAsCs,
+  .dataOutConfig = kLpspiDataOutRetained,
+  .enableInputDelay = false
+};
+
+static void LPSPI1_init(void) {
+  LPSPI_MasterInit(LPSPI1_PERIPHERAL, &LPSPI1_config, LPSPI1_CLOCK_FREQ);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
+  LPSPI1_init();
 }
 
 /***********************************************************************************************************************

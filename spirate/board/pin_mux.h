@@ -25,6 +25,10 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
+#define PCR_PE_pe0 0x00u /*!<@brief Pull Enable: Disables */
+#define PCR_PE_pe1 0x01u /*!<@brief Pull Enable: Enables */
+#define PCR_PS_ps1 0x01u /*!<@brief Pull Select: Enables internal pullup resistor */
+
 /*! @name PORTA19 (number 14), Q1[1]/J1[5]/LED_G/TPM0_CH2
   @{ */
 
@@ -37,6 +41,24 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_LED_GREEN_PIN 19U                   /*!<@brief PORT pin number */
 #define BOARD_INITPINS_LED_GREEN_PIN_MASK (1U << 19U)      /*!<@brief PORT pin mask */
                                                            /* @} */
+
+/*! @name PORTB2 (number 48), U4[6]/J2[6]/J5[11]/J12[4]/U24[3]/LPSPI1_SK
+  @{ */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_FLASH_SCK_PORT PORTB               /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_FLASH_SCK_PIN 2U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_FLASH_SCK_PIN_MASK (1U << 2U)      /*!<@brief PORT pin mask */
+                                                          /* @} */
+
+/*! @name PORTB4 (number 2), U4[7]/J2[3]/J12[3]/U24[6]/R146/LPSPI1_PCS3
+  @{ */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_FLASH_RST_PORT PORTB               /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_FLASH_RST_PIN 4U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_FLASH_RST_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
+                                                          /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

@@ -10,10 +10,27 @@
  * Included files
  **********************************************************************************************************************/
 #include "fsl_common.h"
+#include "fsl_clock.h"
+#include "fsl_lpspi.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
+
+/***********************************************************************************************************************
+ * Definitions
+ **********************************************************************************************************************/
+/* Definitions for BOARD_InitPeripherals functional group */
+/* BOARD_InitPeripherals defines for LPSPI1 */
+/* Definition of peripheral ID */
+#define LPSPI1_PERIPHERAL LPSPI1
+/* Definition of clock source */
+#define LPSPI1_CLOCK_FREQ CLOCK_GetIpFreq(kCLOCK_Lpspi1)
+
+/***********************************************************************************************************************
+ * Global variables
+ **********************************************************************************************************************/
+extern const lpspi_master_config_t LPSPI1_config;
 
 /***********************************************************************************************************************
  * Initialization functions

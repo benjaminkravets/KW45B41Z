@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v15.0
+product: Pins v16.0
 processor: KW45B41Z83xxxA
 package_id: KW45B41Z83AFTA
 mcu_data: ksdk2_0
-processor_version: 15.1.0
+processor_version: 16.1.0
 board: KW45B41Z-EVK
 pin_labels:
 - {pin_num: '14', pin_signal: CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1, label: 'Q1[1]/J1[5]/LED_G/TPM0_CH2', identifier: LED_G;LED_GREEN}
@@ -19,7 +19,7 @@ pin_labels:
 - {pin_num: '18', pin_signal: ADC0_A15/CMP0_IN2/PTA21/WUU0_P5/LPSPI0_PCS3/LPUART0_RX/EWM0_OUT_b/TPM0_CH0/RF_GPO_3/RF_GPO_7/FLEXIO0_D8/RF_GPO_10, label: 'Q3[1]/J1[8]/LED_R/TPM0_CH0',
   identifier: LED_R;LED_RRED;LED_RED}
 - {pin_num: '11', pin_signal: ADC0_A12/PTA16/RF_NOT_ALLOWED/LPSPI0_PCS0/EWM0_OUT_b/LPI2C0_SCLS/TPM0_CH4/LPUART0_RX/RF_GPO_8/FLEXIO0_D5, label: 'U9[4]/R172/J1[1]/J13[3]/LIN_RX/UART0_RX/TPM0_CH4',
-  identifier: UART0_RX;LIN_RX}
+  identifier: UART0_RX;LIN_RX;LPSPI0_PCS}
 - {pin_num: '12', pin_signal: ADC0_A13/PTA17/WUU0_P3/RF_NOT_ALLOWED/LPSPI0_SIN/EWM0_IN/LPI2C0_SDAS/TPM0_CH5/LPUART0_TX/RF_GPO_7/RF_GPO_8/FLEXIO0_D6, label: 'U11[2]/R173/J1[2]/J13[4]/LIN_TX/UART0_TX/TPM0_CH5',
   identifier: UART0_TX;LIN_TX}
 - {pin_num: '24', pin_signal: ADC0_B5/PTD1/SPC0_LPREQ/NMI_b/RF_GPO_4, label: 'J4[1]/J13[2]/SW2/NMI_b/ADC0_B5', identifier: SW2}
@@ -96,6 +96,11 @@ BOARD_InitPins:
 - pin_list:
   - {pin_num: '14', peripheral: GPIOA, signal: 'GPIO, 19', pin_signal: CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1, identifier: LED_GREEN,
     direction: OUTPUT}
+  - {pin_num: '47', peripheral: LPSPI1, signal: IN, pin_signal: ADC0_B11/PTB1/LPSPI1_SIN/TPM1_CH1/FLEXIO0_D27, pull_enable: disable}
+  - {pin_num: '48', peripheral: LPSPI1, signal: SCK, pin_signal: ADC0_B12/PTB2/LPSPI1_SCK/LPUART1_TX/TPM1_CH2/FLEXIO0_D28}
+  - {pin_num: '1', peripheral: LPSPI1, signal: OUT, pin_signal: ADC0_B13/PTB3/WUU0_P14/LPSPI1_SOUT/LPUART1_RX/TPM1_CH3/FLEXIO0_D29, eft_interrupt: disable, pull_select: up,
+    pull_enable: enable}
+  - {pin_num: '2', peripheral: LPSPI1, signal: PCS3, pin_signal: PTB4/WUU0_P15/LPSPI1_PCS3/LPUART1_CTS_b/LPI2C1_SDA/I3C0_SDA/TRGMUX0_IN0/FLEXIO0_D30}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -112,6 +117,8 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_GpioA);
     /* Clock Configuration: Peripheral clocks are enabled; module does not stall low power mode entry */
     CLOCK_EnableClock(kCLOCK_PortA);
+    /* Clock Configuration: Peripheral clocks are enabled; module does not stall low power mode entry */
+    CLOCK_EnableClock(kCLOCK_PortB);
 
     gpio_pin_config_t LED_GREEN_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -122,6 +129,38 @@ void BOARD_InitPins(void)
 
     /* PORTA19 (pin 14) is configured as PTA19 */
     PORT_SetPinMux(BOARD_INITPINS_LED_GREEN_PORT, BOARD_INITPINS_LED_GREEN_PIN, kPORT_MuxAsGpio);
+
+    /* EFT detect interrupts configuration on PORTB */
+    PORT_DisableEFTDetectInterrupts(PORTB, 0x08u);
+
+    /* PORTB1 (pin 47) is configured as LPSPI1_SIN */
+    PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt2);
+
+    PORTB->PCR[1] = ((PORTB->PCR[1] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PE_MASK)))
+
+                     /* Pull Enable: Disables. */
+                     | PORT_PCR_PE(PCR_PE_pe0));
+
+    /* PORTB2 (pin 48) is configured as LPSPI1_SCK */
+    PORT_SetPinMux(BOARD_INITPINS_FLASH_SCK_PORT, BOARD_INITPINS_FLASH_SCK_PIN, kPORT_MuxAlt2);
+
+    /* PORTB3 (pin 1) is configured as LPSPI1_SOUT */
+    PORT_SetPinMux(PORTB, 3U, kPORT_MuxAlt2);
+
+    PORTB->PCR[3] = ((PORTB->PCR[3] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK)))
+
+                     /* Pull Select: Enables internal pullup resistor. */
+                     | PORT_PCR_PS(PCR_PS_ps1)
+
+                     /* Pull Enable: Enables. */
+                     | PORT_PCR_PE(PCR_PE_pe1));
+
+    /* PORTB4 (pin 2) is configured as LPSPI1_PCS3 */
+    PORT_SetPinMux(BOARD_INITPINS_FLASH_RST_PORT, BOARD_INITPINS_FLASH_RST_PIN, kPORT_MuxAlt2);
 }
 
 /* clang-format off */
