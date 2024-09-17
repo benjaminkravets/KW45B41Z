@@ -31,30 +31,32 @@ void delay(uint32_t n) {
 }
 
 
-void spi_transfer(uint8_t tx_buffer[], uint32_t cursor)
+void spi_transfer(uint8_t tx_buffer[], uint32_t cursor, uint32_t bytes_to_receive)
 {
-	uint8_t rx_buffer[BUFFER_SIZE];
+	uint8_t rx_buffer[BUFFER_SIZE] = {0};
 
     PRINTF("\r\nSPI SEND: ");
     for (uint32_t i = 0; i < cursor - 1; i++)
     {
         PRINTF("%i ", tx_buffer[i]);
     }
-    PRINTF("\r\nReceive %i bytes: ", tx_buffer[cursor-1]);
 
 
-    for (uint32_t i = 0; i < (cursor + tx_buffer[cursor-1] - 1); i++){
-    	PRINTF("%i ", rx_buffer[i]);
-    }
 
 
 	lpspi_transfer_t scooby;
 	scooby.txData = tx_buffer;
 	scooby.rxData = rx_buffer;
-	scooby.dataSize = (cursor + tx_buffer[cursor-1] - 1);
+	scooby.dataSize = (cursor + bytes_to_receive - 1);
 	scooby.configFlags = kLPSPI_MasterPcs3 | kLPSPI_MasterPcsContinuous | kLPSPI_MasterByteSwap;
 	if(LPSPI_MasterTransferBlocking(LPSPI1, &scooby) == kStatus_Success)
 		PRINTF("\r\n TX success \r\n");
+
+    PRINTF("\r\nReceive %i bytes: ", bytes_to_receive);
+
+    for (uint32_t i = 0; i < (cursor + bytes_to_receive); i++){
+    	PRINTF("%i ", rx_buffer[i]);
+    }
 }
 
 void spi_pause(uint32_t pause_for)
@@ -79,11 +81,13 @@ void paws(uint8_t command_input[])
 
             while (isdigit(*next_tok))
             {
-                tx_buffer[cursor++] = atoi(next_tok);
+                //tx_buffer[cursor++] = atoi(next_tok);
+                tx_buffer[cursor++] = strtol(next_tok, NULL, 10);
                 next_tok = strtok(NULL, " ");
             }
-
-            spi_transfer(tx_buffer, cursor);
+            uint32_t bytes_to_receive = tx_buffer[cursor-1];
+            tx_buffer[cursor-1] = 0;
+            spi_transfer(tx_buffer, cursor, bytes_to_receive);
 
             continue;
         }
@@ -92,7 +96,7 @@ void paws(uint8_t command_input[])
         {
             next_tok = strtok(NULL, " ");
 
-            spi_pause(atoi(next_tok));
+            spi_pause(strtol(next_tok, NULL, 10));
         }
         else if (strcmp(next_tok, "E") == 0)
         {

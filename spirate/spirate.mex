@@ -121,8 +121,8 @@
                   <pin peripheral="LPSPI1" signal="OUT" pin_num="1" pin_signal="ADC0_B13/PTB3/WUU0_P14/LPSPI1_SOUT/LPUART1_RX/TPM1_CH3/FLEXIO0_D29">
                      <pin_features>
                         <pin_feature name="eft_interrupt" value="disable"/>
-                        <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
+                        <pin_feature name="pull_select" value="down"/>
+                        <pin_feature name="pull_enable" value="disable"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="LPSPI1" signal="PCS3" pin_num="2" pin_signal="PTB4/WUU0_P15/LPSPI1_PCS3/LPUART1_CTS_b/LPI2C1_SDA/I3C0_SDA/TRGMUX0_IN0/FLEXIO0_D30"/>

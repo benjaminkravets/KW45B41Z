@@ -98,8 +98,8 @@ BOARD_InitPins:
     direction: OUTPUT}
   - {pin_num: '47', peripheral: LPSPI1, signal: IN, pin_signal: ADC0_B11/PTB1/LPSPI1_SIN/TPM1_CH1/FLEXIO0_D27, pull_enable: disable}
   - {pin_num: '48', peripheral: LPSPI1, signal: SCK, pin_signal: ADC0_B12/PTB2/LPSPI1_SCK/LPUART1_TX/TPM1_CH2/FLEXIO0_D28}
-  - {pin_num: '1', peripheral: LPSPI1, signal: OUT, pin_signal: ADC0_B13/PTB3/WUU0_P14/LPSPI1_SOUT/LPUART1_RX/TPM1_CH3/FLEXIO0_D29, eft_interrupt: disable, pull_select: up,
-    pull_enable: enable}
+  - {pin_num: '1', peripheral: LPSPI1, signal: OUT, pin_signal: ADC0_B13/PTB3/WUU0_P14/LPSPI1_SOUT/LPUART1_RX/TPM1_CH3/FLEXIO0_D29, eft_interrupt: disable, pull_select: down,
+    pull_enable: disable}
   - {pin_num: '2', peripheral: LPSPI1, signal: PCS3, pin_signal: PTB4/WUU0_P15/LPSPI1_PCS3/LPUART1_CTS_b/LPI2C1_SDA/I3C0_SDA/TRGMUX0_IN0/FLEXIO0_D30}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
@@ -153,11 +153,11 @@ void BOARD_InitPins(void)
                       /* Mask bits to zero which are setting */
                       (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK)))
 
-                     /* Pull Select: Enables internal pullup resistor. */
-                     | PORT_PCR_PS(PCR_PS_ps1)
+                     /* Pull Select: Enables internal pulldown resistor. */
+                     | PORT_PCR_PS(PCR_PS_ps0)
 
-                     /* Pull Enable: Enables. */
-                     | PORT_PCR_PE(PCR_PE_pe1));
+                     /* Pull Enable: Disables. */
+                     | PORT_PCR_PE(PCR_PE_pe0));
 
     /* PORTB4 (pin 2) is configured as LPSPI1_PCS3 */
     PORT_SetPinMux(BOARD_INITPINS_FLASH_RST_PORT, BOARD_INITPINS_FLASH_RST_PIN, kPORT_MuxAlt2);

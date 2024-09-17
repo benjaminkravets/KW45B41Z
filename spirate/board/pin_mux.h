@@ -26,8 +26,7 @@ extern "C" {
 void BOARD_InitBootPins(void);
 
 #define PCR_PE_pe0 0x00u /*!<@brief Pull Enable: Disables */
-#define PCR_PE_pe1 0x01u /*!<@brief Pull Enable: Enables */
-#define PCR_PS_ps1 0x01u /*!<@brief Pull Select: Enables internal pullup resistor */
+#define PCR_PS_ps0 0x00u /*!<@brief Pull Select: Enables internal pulldown resistor */
 
 /*! @name PORTA19 (number 14), Q1[1]/J1[5]/LED_G/TPM0_CH2
   @{ */
