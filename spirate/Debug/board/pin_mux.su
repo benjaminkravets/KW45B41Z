@@ -1,0 +1,13 @@
+C:\Users\bakra\Desktop\KW45B41Z\spirate\drivers/fsl_clock.h:576:20:CLOCK_EnableClock	24	static
+C:\Users\bakra\Desktop\KW45B41Z\spirate\drivers/fsl_port.h:360:20:PORT_SetPinConfig	32	static
+C:\Users\bakra\Desktop\KW45B41Z\spirate\drivers/fsl_port.h:463:20:PORT_SetPinMux	24	static
+C:\Users\bakra\Desktop\KW45B41Z\spirate\drivers/fsl_port.h:644:20:PORT_DisableEFTDetectInterrupts	16	static
+../board/pin_mux.c:85:6:BOARD_InitBootPins	8	static
+../board/pin_mux.c:114:6:BOARD_InitPins	16	static
+../board/pin_mux.c:189:6:BOARD_InitLEDsPins	32	static
+../board/pin_mux.c:301:6:BOARD_InitDEBUG_UARTPins	16	static
+../board/pin_mux.c:371:6:BOARD_InitButtonsPins	32	static
+../board/pin_mux.c:487:6:BOARD_InitCANPins	16	static
+../board/pin_mux.c:562:6:BOARD_InitFlashPins	32	static
+../board/pin_mux.c:702:6:BOARD_InitACCELPins	16	static
+../board/pin_mux.c:772:6:BOARD_InitLINPins	24	static

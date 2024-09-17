@@ -1,0 +1,8 @@
+../drivers/fsl_clock.h:576:20:CLOCK_EnableClock	24	static
+../drivers/fsl_clock.h:637:20:CLOCK_DisableClock	16	static
+../drivers/fsl_lpit.h:365:20:LPIT_Reset	16	static
+../drivers/fsl_lpit.c:49:10:LPIT_GetInstance	24	static
+../drivers/fsl_lpit.c:88:6:LPIT_Init	24	static
+../drivers/fsl_lpit.c:117:6:LPIT_Deinit	24	static
+../drivers/fsl_lpit.c:144:6:LPIT_GetDefaultConfig	16	static
+../drivers/fsl_lpit.c:169:10:LPIT_SetupChannel	32	static

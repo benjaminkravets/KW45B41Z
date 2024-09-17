@@ -1,0 +1,10 @@
+../drivers/fsl_ccm32k.h:399:20:CCM32K_SetClockMonitorFreqTrimValue	16	static
+../drivers/fsl_ccm32k.h:412:20:CCM32K_SetClockMonitorDivideTrimValue	16	static
+../drivers/fsl_ccm32k.h:515:24:CCM32K_GetStatusFlag	16	static
+../drivers/fsl_ccm32k.c:49:6:CCM32K_Enable32kFro	16	static
+../drivers/fsl_ccm32k.c:72:6:CCM32K_Set32kFroTrimValue	24	static
+../drivers/fsl_ccm32k.c:115:6:CCM32K_Set32kOscConfig	32	static
+../drivers/fsl_ccm32k.c:175:6:CCM32K_EnableClockMonitor	16	static
+../drivers/fsl_ccm32k.c:195:6:CCM32K_SetClockMonitorConfig	16	static
+../drivers/fsl_ccm32k.c:216:16:CCM32K_GetCurrentState	24	static
+../drivers/fsl_ccm32k.c:241:23:CCM32K_GetClockSource	24	static

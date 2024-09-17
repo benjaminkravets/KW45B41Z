@@ -1,0 +1,8 @@
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\CMSIS/core_cm33.h:2378:22:__NVIC_EnableIRQ	16	static
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\drivers/fsl_common_arm.h:514:24:EnableIRQ	24	static
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\drivers/fsl_lpit.h:213:20:LPIT_EnableInterrupts	16	static
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\drivers/fsl_lpit.h:297:20:LPIT_SetTimerPeriod	24	static
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\drivers/fsl_lpit.h:337:20:LPIT_StartTimer	24	static
+../board/peripherals.c:139:13:LPIT0_init	8	static
+../board/peripherals.c:157:6:BOARD_InitPeripherals	8	static
+../board/peripherals.c:166:6:BOARD_InitBootPeripherals	8	static

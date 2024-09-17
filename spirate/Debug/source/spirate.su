@@ -1,0 +1,6 @@
+../source/spirate.c:26:6:delay	24	static
+../source/spirate.c:34:6:spi_transfer	304	static
+../source/spirate.c:62:6:spi_pause	16	static
+../source/spirate.c:69:6:paws	288	static
+../source/spirate.c:110:6:spi_sample	40	static
+../source/spirate.c:125:5:main	784	static

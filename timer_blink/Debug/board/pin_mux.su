@@ -1,0 +1,12 @@
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\drivers/fsl_clock.h:576:20:CLOCK_EnableClock	24	static
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\drivers/fsl_port.h:322:20:PORT_SetPinConfig	32	static
+C:\Users\bakra\Desktop\KW45B41Z\timer_blink\drivers/fsl_port.h:425:20:PORT_SetPinMux	24	static
+../board/pin_mux.c:85:6:BOARD_InitBootPins	8	static
+../board/pin_mux.c:110:6:BOARD_InitPins	16	static
+../board/pin_mux.c:161:6:BOARD_InitLEDsPins	32	static
+../board/pin_mux.c:273:6:BOARD_InitDEBUG_UARTPins	16	static
+../board/pin_mux.c:343:6:BOARD_InitButtonsPins	32	static
+../board/pin_mux.c:459:6:BOARD_InitCANPins	16	static
+../board/pin_mux.c:534:6:BOARD_InitFlashPins	32	static
+../board/pin_mux.c:674:6:BOARD_InitACCELPins	16	static
+../board/pin_mux.c:744:6:BOARD_InitLINPins	24	static
