@@ -5,18 +5,26 @@ import sys
 
 ser = serial.Serial(port='COM4', baudrate=115200)
 
-htois = lambda a : str(int(a, 16))
+htois = lambda a : str(int(a, 16)) #hex to integer string
+
+address_to_three_bytes = lambda address : [(address >> z) & 0xFF for z in [16,8,0]]
+three_bytes_as_str = lambda bytes : ' '.join(str(num) for num in bytes)
+
+adr_bits = lambda a : three_bytes_as_str(address_to_three_bytes(a))
 
 class W25Q128JV:
-    read_status_register = ["SR " + htois("0x5") + " 64 E", "SR " + htois("0x35") + " 64 E", "SR " + htois("0x15") + " 64 E"]
-    read_data = "SR " + htois("0x3") + " 20 E"
+
+    read_status_register = ["SR " + htois("0x5") + " 2 E", "SR " + htois("0x35") + " 2 E", "SR " + htois("0x15") + " 2 E"]
+
+    read_data = lambda a : "SR " + htois("0x3") + " " + three_bytes_as_str(address_to_three_bytes(a)) + " 10 E"
+
     write_enable = "SR " + htois("0x6") + " 0 E"
+    write_disable = "SR " + htois("0x4") + " 0 E"
     read_unique_id = "SR " + htois("0x4b") + " 20 E"
     read_jedec_id = "SR " + htois("0x4b") + " 8 E"
     read_manufacturer_device_id = "SR " + htois("0x90") + " 20 E"
 
-    write_enable_then_read_status_register = "SR " + htois("0x6") + " 0 " + read_status_register[0]
-    write_disable_then_read_status_register = "SR " + htois("0x4") + " 0 " + read_status_register[0]
+    page_program = "SR " + htois("0x02") + " " + three_bytes_as_str(address_to_three_bytes(0xFFF)) + " " + htois("0x5555")
 
     
 
@@ -32,26 +40,33 @@ class W25Q128JV:
 
 def send_receive():
 
+    command_queue = [W25Q128JV.write_enable, W25Q128JV.read_status_register[0], W25Q128JV.write_disable, W25Q128JV.read_status_register[0]]; command_queue_index = 0
+
     while (True):
 
         a = 1
+
         
         match a:
             case 0:
                 command = input()
             
             case 1:
-                command = "SR 1 2 3 4 5 SR 5 4 3 2 1 SR 1 1 2 3 4 5 E"
-                #command = "SR " + str(int("5",16)) + " 5 E"
-                #command = W25Q128JV.read_status_register[1]
-                command = W25Q128JV.write_disable_then_read_status_register
-                #print(command)
-                #sys.exit()
-
+                command = W25Q128JV.write_enable
 
 
                 print(command)
+                #sys.exit()
                 time.sleep(1)
+
+            case 2:
+
+                if command_queue_index == len(command_queue): break
+                command = command_queue[command_queue_index]
+                command_queue_index += 1
+                
+                time.sleep(1)
+                #continue
 
         ser.write(bytearray(" " + command + " " + "\r\n", 'ascii'))
 
