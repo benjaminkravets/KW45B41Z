@@ -5,7 +5,7 @@
  * Generated linker script file for KW45B41Z83xxxA
  * Created from memory.ldt by FMCreateLinkMemory
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.9.0 [Build 2144] [2024-01-05] on Sep 3, 2024, 7:35:05 PM
+ * MCUXpresso IDE v11.10.0 [Build 3148] [2024-07-03] on Sep 21, 2024, 2:06:37 PM
  */
 
 MEMORY

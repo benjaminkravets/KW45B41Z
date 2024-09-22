@@ -60,7 +60,7 @@ clean:
 
 post-build:
 	-@echo 'Performing post-build steps'
-	-arm-none-eabi-size "spirate.axf" ; "c:\nxp\LinkServer_1.4.85\LinkServer.exe" flash KW45B41Z83xxxA:KW45B41Z-EVK load "C:\Users\bakra\Desktop\KW45B41Z\spirate\Debug\spirate.axf" ; # arm-none-eabi-objcopy -v -O binary "spirate.axf" "spirate.bin" ; # checksum -p KW45B41Z83xxxA -d "spirate.bin"
+	-arm-none-eabi-size "spirate.axf" ; arm-none-eabi-objcopy -v -O binary "spirate.axf" "spirate.bin" ; "c:\nxp\LinkServer_1.4.85\LinkServer.exe" flash KW45B41Z83xxxA:KW45B41Z-EVK load "C:\Users\bakra\Desktop\KW45B41Z\spirate\Debug\spirate.axf" ; # checksum -p KW45B41Z83xxxA -d "spirate.bin"
 	-@echo ' '
 
 .PHONY: all clean dependents main-build post-build

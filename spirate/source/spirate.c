@@ -21,7 +21,7 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 
 void delay(uint32_t n) {
 	volatile uint32_t i;
@@ -41,9 +41,6 @@ void spi_transfer(uint8_t tx_buffer[], uint32_t cursor, uint32_t bytes_to_receiv
         PRINTF("%i ", tx_buffer[i]);
     }
 
-
-
-
 	lpspi_transfer_t scooby;
 	scooby.txData = tx_buffer;
 	scooby.rxData = rx_buffer;
@@ -54,7 +51,7 @@ void spi_transfer(uint8_t tx_buffer[], uint32_t cursor, uint32_t bytes_to_receiv
 
     PRINTF("\r\nReceive %i bytes: ", bytes_to_receive);
 
-    for (uint32_t i = 0; i < (cursor + bytes_to_receive); i++){
+    for (uint32_t i = 0; i < bytes_to_receive; i++){
     	PRINTF("%i ", rx_buffer[i]);
     }
 }
@@ -138,9 +135,9 @@ int main(void) {
 	//bring_up_uart();
 
 
-	uint8_t comm_buffer[BUFFER_SIZE];
-	uint8_t rx_buffer[BUFFER_SIZE];
-	uint8_t tx_buffer[BUFFER_SIZE];
+	uint8_t comm_buffer[BUFFER_SIZE] = {0};
+	uint8_t rx_buffer[BUFFER_SIZE] = {0};
+	uint8_t tx_buffer[BUFFER_SIZE] = {0};
 	uint8_t cur_char;
 	uint32_t cursor = 0;
     //uint8_t foo[] = "SR 1 56 78 255 3 4 P 10000 SR 45 6 8 9 62 2 P 2000 SR 1 32 54 234 E";
@@ -166,17 +163,24 @@ int main(void) {
 
 	PRINTF("\r\nKW45>");
 	while (1) {
+		//PRINTF("Gets here 1 \r\n");
 		cur_char = GETCHAR();
+		//PRINTF("Gets here 2 \r\n");
 
 		comm_buffer[cursor] = cur_char;
 		cursor += 1;
 
 		if (cur_char == 13) {
+			//PRINTF("Gets here 2.5 \r\n");
 
 			paws(comm_buffer);
 
 			PRINTF("\r\nKW45>");
+			//PRINTF("Gets here 3 \r\n");
+
 			memset(rx_buffer, 0, BUFFER_SIZE);
+			//PRINTF("Gets here 4 \r\n");
+
 			cursor = 0;
 		}
 
