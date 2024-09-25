@@ -41,13 +41,14 @@ void spi_transfer(uint8_t tx_buffer[], uint32_t cursor, uint32_t bytes_to_receiv
         PRINTF("%i ", tx_buffer[i]);
     }
 
+    PRINTF("\r\nTX buffer size %i \r\n", sizeof(tx_buffer));
 	lpspi_transfer_t scooby;
 	scooby.txData = tx_buffer;
 	scooby.rxData = rx_buffer;
 	scooby.dataSize = (cursor + bytes_to_receive - 1);
 	scooby.configFlags = kLPSPI_MasterPcs3 | kLPSPI_MasterPcsContinuous | kLPSPI_MasterByteSwap;
 	if(LPSPI_MasterTransferBlocking(LPSPI1, &scooby) == kStatus_Success)
-		PRINTF("\r\n TX success \r\n");
+		PRINTF("\r\nTX success \r\n");
 
     PRINTF("\r\nReceive %i bytes: ", bytes_to_receive);
 
