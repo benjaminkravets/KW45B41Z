@@ -50,11 +50,13 @@ void spi_transfer(uint8_t tx_buffer[], uint32_t cursor, uint32_t bytes_to_receiv
 	if(LPSPI_MasterTransferBlocking(LPSPI1, &scooby) == kStatus_Success)
 		PRINTF("\r\nTX success \r\n");
 
-    PRINTF("\r\nReceive %i bytes: ", bytes_to_receive);
+    PRINTF("\r\nReceived %i bytes: ", bytes_to_receive);
 
-    for (uint32_t i = 0; i < bytes_to_receive; i++){
+    for (uint32_t i = cursor - 1; i < (bytes_to_receive + cursor); i++){
     	PRINTF("%i ", rx_buffer[i]);
     }
+
+    PRINTF("Curor: %i \r\n", cursor);
 }
 
 void spi_pause(uint32_t pause_for)
@@ -70,7 +72,7 @@ void paws(uint8_t command_input[])
 
     while (next_tok != NULL)
     {
-        uint8_t tx_buffer[256] = {0};
+        uint8_t tx_buffer[BUFFER_SIZE] = {0};
         uint32_t cursor = 0;
 
         if (strcmp(next_tok, "SR") == 0)
@@ -105,17 +107,7 @@ void paws(uint8_t command_input[])
     }
 }
 
-void spi_sample(size_t tx_size, uint8_t tx_buffer[], uint8_t rx_buffer[]){
 
-	lpspi_transfer_t scooby;
-	scooby.txData = tx_buffer;
-	scooby.rxData = rx_buffer;
-	scooby.dataSize = tx_size;
-	scooby.configFlags = kLPSPI_MasterPcs3 | kLPSPI_MasterPcsContinuous | kLPSPI_MasterByteSwap;
-
-
-	LPSPI_MasterTransferBlocking(LPSPI1, &scooby);
-}
 /*
  * @brief   Application entry point.
  */
@@ -141,26 +133,7 @@ int main(void) {
 	uint8_t tx_buffer[BUFFER_SIZE] = {0};
 	uint8_t cur_char;
 	uint32_t cursor = 0;
-    //uint8_t foo[] = "SR 1 56 78 255 3 4 P 10000 SR 45 6 8 9 62 2 P 2000 SR 1 32 54 234 E";
 
-	//paws(foo);
-
-//	while(1){
-//
-////		PRINTF("RX BUFFER: ");
-////		for(int i = 0; i < 10; i++){
-////			PRINTF("%i ", rx_buffer[i]);
-////		}
-//
-//		spi_sample(20, tx_buffer, rx_buffer);
-//		delay(5000000);
-//		PRINTF("Sent \r\n");
-//
-////		PRINTF("RX BUFFER: ");
-////		for(int i = 0; i < 10; i++){
-////			PRINTF("%i ", rx_buffer[i]);
-////		}
-//	}
 
 	PRINTF("\r\nKW45>");
 	while (1) {
