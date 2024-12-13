@@ -11,7 +11,7 @@ product: Pins v16.0
 processor: KW45B41Z83xxxA
 package_id: KW45B41Z83AFTA
 mcu_data: ksdk2_0
-processor_version: 16.2.0
+processor_version: 16.3.0
 board: KW45B41Z-EVK
 pin_labels:
 - {pin_num: '14', pin_signal: CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1, label: 'Q1[1]/J1[5]/LED_G/TPM0_CH2', identifier: LED_G;LED_GREEN}
@@ -94,13 +94,13 @@ void BOARD_InitBootPins(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: cm33, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '14', peripheral: GPIOA, signal: 'GPIO, 19', pin_signal: CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1, identifier: LED_GREEN,
-    direction: OUTPUT}
   - {pin_num: '47', peripheral: LPSPI1, signal: IN, pin_signal: ADC0_B11/PTB1/LPSPI1_SIN/TPM1_CH1/FLEXIO0_D27, pull_enable: disable}
   - {pin_num: '48', peripheral: LPSPI1, signal: SCK, pin_signal: ADC0_B12/PTB2/LPSPI1_SCK/LPUART1_TX/TPM1_CH2/FLEXIO0_D28}
   - {pin_num: '1', peripheral: LPSPI1, signal: OUT, pin_signal: ADC0_B13/PTB3/WUU0_P14/LPSPI1_SOUT/LPUART1_RX/TPM1_CH3/FLEXIO0_D29, eft_interrupt: disable, pull_select: down,
     pull_enable: disable}
   - {pin_num: '2', peripheral: LPSPI1, signal: PCS3, pin_signal: PTB4/WUU0_P15/LPSPI1_PCS3/LPUART1_CTS_b/LPI2C1_SDA/I3C0_SDA/TRGMUX0_IN0/FLEXIO0_D30}
+  - {pin_num: '14', peripheral: GPIOA, signal: 'GPIO, 19', pin_signal: CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1, identifier: LED_GREEN,
+    direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */

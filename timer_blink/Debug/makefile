@@ -60,7 +60,7 @@ clean:
 
 post-build:
 	-@echo 'Performing post-build steps'
-	-arm-none-eabi-size "timer_blink.axf" ; "c:\nxp\LinkServer_1.4.85\LinkServer.exe" flash KW45B41Z83xxxA:KW45B41Z-EVK load "C:\Users\bakra\Desktop\KW45B41Z\timer_blink\Debug\timer_blink.axf" ; # arm-none-eabi-objcopy -v -O binary "timer_blink.axf" "timer_blink.bin" ; # checksum -p KW45B41Z83xxxA -d "timer_blink.bin"
+	-arm-none-eabi-size "timer_blink.axf" ; "c:\nxp\LinkServer_1.4.85\LinkServer.exe" flash KW45B41Z83xxxA:KW45B41Z-EVK load "C:\Users\bakra\Desktop\KW45B41Z\timer_blink\Debug\timer_blink.axf" ; arm-none-eabi-objcopy -v -O binary "timer_blink.axf" "timer_blink.bin" ; # checksum -p KW45B41Z83xxxA -d "timer_blink.bin"
 	-@echo ' '
 
 .PHONY: all clean dependents main-build post-build

@@ -28,19 +28,6 @@ void BOARD_InitBootPins(void);
 #define PCR_PE_pe0 0x00u /*!<@brief Pull Enable: Disables */
 #define PCR_PS_ps0 0x00u /*!<@brief Pull Select: Enables internal pulldown resistor */
 
-/*! @name PORTA19 (number 14), Q1[1]/J1[5]/LED_G/TPM0_CH2
-  @{ */
-
-/* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_LED_GREEN_GPIO GPIOA                /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_LED_GREEN_GPIO_PIN_MASK (1U << 19U) /*!<@brief GPIO pin mask */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_INITPINS_LED_GREEN_PORT PORTA                /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_LED_GREEN_PIN 19U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_LED_GREEN_PIN_MASK (1U << 19U)      /*!<@brief PORT pin mask */
-                                                           /* @} */
-
 /*! @name PORTB2 (number 48), U4[6]/J2[6]/J5[11]/J12[4]/U24[3]/LPSPI1_SK
   @{ */
 
@@ -58,6 +45,19 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_FLASH_RST_PIN 4U                   /*!<@brief PORT pin number */
 #define BOARD_INITPINS_FLASH_RST_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
                                                           /* @} */
+
+/*! @name PORTA19 (number 14), Q1[1]/J1[5]/LED_G/TPM0_CH2
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LED_GREEN_GPIO GPIOA                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LED_GREEN_GPIO_PIN_MASK (1U << 19U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_LED_GREEN_PORT PORTA                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_LED_GREEN_PIN 19U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LED_GREEN_PIN_MASK (1U << 19U)      /*!<@brief PORT pin mask */
+                                                           /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

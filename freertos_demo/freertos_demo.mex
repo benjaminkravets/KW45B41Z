@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_15 http://mcuxpresso.nxp.com/XSD/mex_configuration_15.xsd" uuid="60fb08db-c103-4e31-9483-7248d480c8e7" version="15" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="KW45B41Z83xxxA" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_16 http://mcuxpresso.nxp.com/XSD/mex_configuration_16.xsd" uuid="60fb08db-c103-4e31-9483-7248d480c8e7" version="16" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_16" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>KW45B41Z83xxxA</processor>
       <package>KW45B41Z83AFTA</package>
@@ -18,13 +18,13 @@
       <generate_registers_defines>false</generate_registers_defines>
    </preferences>
    <tools>
-      <pins name="Pins" version="15.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="16.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/pin_mux.c" update_enabled="true"/>
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>15.0.0</processor_version>
+            <processor_version>16.3.0</processor_version>
             <pin_labels>
                <pin_label pin_num="14" pin_signal="CMP1_IN0/PTA19/WUU0_P4/LPSPI0_SCK/LPUART0_RTS_b/LPI2C0_SCL/TPM0_CH2/RF_GPO_1" label="Q1[1]/J1[5]/LED_G/TPM0_CH2" identifier="LED_G;LED_GREEN"/>
                <pin_label pin_num="17" pin_signal="ADC0_A14/CMP0_IN3/PTA20/LPSPI0_PCS2/LPUART0_TX/EWM0_IN/TPM0_CH1/RF_GPO_2/FLEXIO0_D7" label="Q4[1]/J1[7]/LED_B/RF_GPO_2/TPM0_CH1" identifier="LED_B;LED_BLUE"/>
@@ -182,7 +182,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPUART1" description="Peripheral LPUART1 is not initialized" problem_level="1" source="Pins:BOARD_InitDEBUG_UARTPins">
+                  <dependency resourceType="Peripheral" resourceId="LPUART1" description="Peripheral LPUART1 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitDEBUG_UARTPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -284,7 +284,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="CAN0" description="Peripheral CAN0 is not initialized" problem_level="1" source="Pins:BOARD_InitCANPins">
+                  <dependency resourceType="Peripheral" resourceId="CAN0" description="Peripheral CAN0 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitCANPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -333,7 +333,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPSPI1" description="Peripheral LPSPI1 is not initialized" problem_level="1" source="Pins:BOARD_InitFlashPins">
+                  <dependency resourceType="Peripheral" resourceId="LPSPI1" description="Peripheral LPSPI1 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitFlashPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -418,7 +418,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPI2C1" description="Peripheral LPI2C1 is not initialized" problem_level="1" source="Pins:BOARD_InitACCELPins">
+                  <dependency resourceType="Peripheral" resourceId="LPI2C1" description="Peripheral LPI2C1 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitACCELPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -470,7 +470,7 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="Peripheral" resourceId="LPUART0" description="Peripheral LPUART0 is not initialized" problem_level="1" source="Pins:BOARD_InitLINPins">
+                  <dependency resourceType="Peripheral" resourceId="LPUART0" description="Peripheral LPUART0 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitLINPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -527,55 +527,55 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="13.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="14.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/clock_config.c" update_enabled="true"/>
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>15.0.0</processor_version>
+            <processor_version>16.3.0</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
                <description></description>
                <options/>
                <dependencies>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.EXTAL32K" description="&apos;EXTAL32K&apos; (Pins tool id: CCM32K.EXTAL32K, Clocks tool id: CCM32K.EXTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_extal" description="&apos;EXTAL32K&apos; (Pins tool id: RTC.rtc_extal, Clocks tool id: CCM32K.EXTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.EXTAL32K" description="&apos;EXTAL32K&apos; (Pins tool id: CCM32K.EXTAL32K, Clocks tool id: CCM32K.EXTAL32K) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_extal" description="&apos;EXTAL32K&apos; (Pins tool id: RTC.rtc_extal, Clocks tool id: CCM32K.EXTAL32K) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>INPUT</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.XTAL32K" description="&apos;XTAL32K&apos; (Pins tool id: CCM32K.XTAL32K, Clocks tool id: CCM32K.XTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_xtal" description="&apos;XTAL32K&apos; (Pins tool id: RTC.rtc_xtal, Clocks tool id: CCM32K.XTAL32K) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="CCM32K.XTAL32K" description="&apos;XTAL32K&apos; (Pins tool id: CCM32K.XTAL32K, Clocks tool id: CCM32K.XTAL32K) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="RTC.rtc_xtal" description="&apos;XTAL32K&apos; (Pins tool id: RTC.rtc_xtal, Clocks tool id: CCM32K.XTAL32K) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>OUTPUT</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.EXTAL0" description="&apos;EXTAL0&apos; (Pins tool id: SCG.EXTAL0, Clocks tool id: SCG.EXTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.extal" description="&apos;EXTAL0&apos; (Pins tool id: SCG.extal, Clocks tool id: SCG.EXTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.EXTAL0" description="&apos;EXTAL0&apos; (Pins tool id: SCG.EXTAL0, Clocks tool id: SCG.EXTAL0) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.extal" description="&apos;EXTAL0&apos; (Pins tool id: SCG.extal, Clocks tool id: SCG.EXTAL0) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>INPUT</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.XTAL0" description="&apos;XTAL0&apos; (Pins tool id: SCG.XTAL0, Clocks tool id: SCG.XTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.xtal" description="&apos;XTAL0&apos; (Pins tool id: SCG.xtal, Clocks tool id: SCG.XTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="routed" evaluation="">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PinSignal" resourceId="SCG.XTAL0" description="&apos;XTAL0&apos; (Pins tool id: SCG.XTAL0, Clocks tool id: SCG.XTAL0) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="SCG.xtal" description="&apos;XTAL0&apos; (Pins tool id: SCG.xtal, Clocks tool id: SCG.XTAL0) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
                      <feature name="direction" evaluation="">
                         <data>OUTPUT</data>
                      </feature>
@@ -635,13 +635,13 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="14.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="15.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>15.0.0</processor_version>
+            <processor_version>16.3.0</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="b82e970b-aefd-4c28-bb14-af73e85818df" called_from_default_init="true" id_prefix="" core="cm33">
@@ -649,7 +649,7 @@
                <options/>
                <dependencies/>
                <instances>
-                  <instance name="NVIC" uuid="9864e38c-6fb1-4580-a593-b14dcef5e025" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="9864e38c-6fb1-4580-a593-b14dcef5e025" type="nvic" type_id="nvic" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table"/>
                         <array name="interrupts"/>

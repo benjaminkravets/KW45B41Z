@@ -5,7 +5,7 @@
  * Generated linker script file for KW45B41Z83xxxA
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.10.0 [Build 3148] [2024-07-03] on Sep 21, 2024, 2:06:37 PM
+ * MCUXpresso IDE v11.10.0 [Build 3148] [2024-07-03] on Dec 11, 2024, 8:32:52 PM
  */
 
 INCLUDE "freertos_demo_Debug_library.ld"

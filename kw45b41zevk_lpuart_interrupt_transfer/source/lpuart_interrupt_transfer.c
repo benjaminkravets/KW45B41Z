@@ -18,7 +18,7 @@
 #define DEMO_LPUART          LPUART1
 #define DEMO_LPUART_CLKSRC   kCLOCK_Lpuart1
 #define DEMO_LPUART_CLK_FREQ BOARD_DEBUG_UART_CLK_FREQ
-#define ECHO_BUFFER_LENGTH 1
+#define ECHO_BUFFER_LENGTH 8
 
 /*******************************************************************************
  * Prototypes
