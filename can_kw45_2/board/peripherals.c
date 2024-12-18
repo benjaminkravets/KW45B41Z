@@ -116,7 +116,6 @@ instance:
       - rxIdleConfig: 'kLPUART_IdleCharacter1'
       - enableTx: 'true'
       - enableRx: 'true'
-    - quick_selection: 'QuickSelection1'
   - interruptsCfg:
     - interrupts: 'kLPUART_RxActiveEdgeInterruptEnable'
     - interrupt_vectors:

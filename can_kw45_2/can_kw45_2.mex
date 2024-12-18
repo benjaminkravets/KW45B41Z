@@ -712,7 +712,7 @@
                      </config_set>
                   </instance>
                   <instance name="LPUART0" uuid="e70956de-0344-4676-ac85-bff666a83257" type="lpuart" type_id="lpuart_2.8.1" mode="interrupts" peripheral="LPUART0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
-                     <config_set name="lpuartConfig_t" quick_selection="QuickSelection1">
+                     <config_set name="lpuartConfig_t">
                         <struct name="lpuartConfig">
                            <setting name="clockSource" value="LpuartClock"/>
                            <setting name="lpuartSrcClkFreq" value="ClocksTool_DefaultInit"/>
@@ -741,7 +741,6 @@
                         <set name="interrupts">
                            <selected>
                               <id>kLPUART_RxActiveEdgeInterruptEnable</id>
-                              <id>kLPUART_Match1InterruptEnable</id>
                            </selected>
                         </set>
                         <struct name="interrupt_vectors">
