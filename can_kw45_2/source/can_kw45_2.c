@@ -11,7 +11,6 @@
  */
 #include <stdio.h>
 #include "board.h"
-#include "peripherals.h"
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "fsl_debug_console.h"
@@ -20,6 +19,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "stream_buffer.h"
+#include "peripherals.h"
+//#include "projdefs.h"
+
 /* TODO: insert other definitions and declarations here. */
 /* LPUART0_IRQn interrupt handler */
 uint8_t rx_char = 'a';
@@ -37,7 +39,8 @@ void delay(uint32_t n) {
 void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
 	uint32_t intStatus;
 	/* Reading all interrupt flags of status registers */
-	intStatus = LPUART_GetStatusFlags(LPUART0_PERIPHERAL);
+	intStatus = LPUART_GetStatusFlags(LPUART0);
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Flags can be cleared by reading the status register and reading/writing data registers.
 	 See the reference manual for details of each flag.
@@ -54,10 +57,14 @@ void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
 		rx_char = ((uint32_t) (LPUART0->DATA));
 	} while (!rx_char);
 
+
 	status_t status;
-	status = LPUART_ClearStatusFlags(LPUART0_PERIPHERAL, intStatus);
+	status = LPUART_ClearStatusFlags(LPUART0, intStatus);
 
 	GPIO_PortToggle(GPIOA, 1u << 19U);
+	//xStreamBufferSendFromISR(xStreamBuffer0, &rx_char, 1, xHigherPriorityTaskWoken);
+	//xStreamBufferSend(xStreamBuffer0, &rx_char, 1, pdMS_TO_TICKS(10));
+
 
 
 	/* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
@@ -66,15 +73,16 @@ void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
     __DSB();
   #endif
 }
-
 static void commandReceiverTask() {
 
 	PRINTF("Hello World\r\n");
+	uint8_t command_char;
 
 	while (1) {
 		delay(1000000);
+		uint8_t transmitted_bytes = xStreamBufferReceive(xStreamBuffer0, &command_char, 1, pdMS_TO_TICKS(1000));
 		GPIO_PortToggle(GPIOA, 1u << 19U);
-		PRINTF("Hello World\r\n");
+		PRINTF("Hello World!\r\n");
 		PRINTF("%c %i %i \r\n", rx_char, rx_char, counter);
 
 	}
@@ -94,14 +102,27 @@ int main(void) {
 	BOARD_InitDebugConsole();
 #endif
 	if (xTaskCreate(commandReceiverTask, "Command handler",
-			configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL)
-			!= pdPass) {
+			configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1, NULL)
+			!= pdPASS) {
 		PRINTF("Task creation failed");
 		while (1);
 	}
+
 	xStreamBuffer0 = xStreamBufferCreate(COMMAND_BUFFER_LENGTH, 1);
+	if (xStreamBuffer0 == NULL){
+		while (1);
+	}
 
 	vTaskStartScheduler();
+	while (1) {
+		delay(1000000);
+		GPIO_PortToggle(GPIOA, 1u << 19U);
+		PRINTF("Hello World\r\n");
+		PRINTF("%c %i %i \r\n", rx_char, rx_char, counter);
+
+	}
+
+	//vTaskStartScheduler();
 
 	/* Force the counter to be placed into memory. */
 	volatile static int i = 0;
