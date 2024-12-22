@@ -24,7 +24,7 @@
 
 /* TODO: insert other definitions and declarations here. */
 /* LPUART0_IRQn interrupt handler */
-uint8_t rx_char = 'a';
+uint8_t rx_char;
 uint8_t counter = 0;
 #define COMMAND_BUFFER_LENGTH 10
 static StreamBufferHandle_t xStreamBuffer0 = NULL;
@@ -57,15 +57,12 @@ void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
 		rx_char = ((uint32_t) (LPUART0->DATA));
 	} while (!rx_char);
 
-
 	status_t status;
 	status = LPUART_ClearStatusFlags(LPUART0, intStatus);
 
 	GPIO_PortToggle(GPIOA, 1u << 19U);
-	//xStreamBufferSendFromISR(xStreamBuffer0, &rx_char, 1, xHigherPriorityTaskWoken);
-	//xStreamBufferSend(xStreamBuffer0, &rx_char, 1, pdMS_TO_TICKS(10));
-
-
+	xStreamBufferSendFromISR(xStreamBuffer0, &rx_char, 1,
+			xHigherPriorityTaskWoken);
 
 	/* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
 	 Store immediate overlapping exception return operation might vector to incorrect interrupt. */
@@ -79,11 +76,12 @@ static void commandReceiverTask() {
 	uint8_t command_char;
 
 	while (1) {
-		delay(1000000);
-		uint8_t transmitted_bytes = xStreamBufferReceive(xStreamBuffer0, &command_char, 1, pdMS_TO_TICKS(1000));
+		//delay(1000000);
+		uint8_t transmitted_bytes = xStreamBufferReceive(xStreamBuffer0,
+				&command_char, 1, portMAX_DELAY);
 		GPIO_PortToggle(GPIOA, 1u << 19U);
 		PRINTF("Hello World!\r\n");
-		PRINTF("%c %i %i \r\n", rx_char, rx_char, counter);
+		PRINTF("%i, %c, %i, %i received\r\n", counter, command_char, command_char, transmitted_bytes);
 
 	}
 }
@@ -101,16 +99,19 @@ int main(void) {
 	/* Init FSL debug console. */
 	BOARD_InitDebugConsole();
 #endif
+	//don't let interrupt priority == 0
+	NVIC_SetPriority(LPUART0_IRQn, 10);
 	if (xTaskCreate(commandReceiverTask, "Command handler",
-			configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1, NULL)
-			!= pdPASS) {
+	configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS) {
 		PRINTF("Task creation failed");
-		while (1);
+		while (1)
+			;
 	}
 
 	xStreamBuffer0 = xStreamBufferCreate(COMMAND_BUFFER_LENGTH, 1);
-	if (xStreamBuffer0 == NULL){
-		while (1);
+	if (xStreamBuffer0 == NULL) {
+		while (1)
+			;
 	}
 
 	vTaskStartScheduler();
