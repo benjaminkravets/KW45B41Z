@@ -51,14 +51,24 @@ void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
 	 */
 	/* Place your code here */
 	//FIFO bit 22 RXEMPT is not working, pole until not null
-	counter = 0;
-	do {
-		counter += 1;
-		rx_char = ((uint32_t) (LPUART0->DATA));
-	} while (!rx_char);
-
 	status_t status;
 	status = LPUART_ClearStatusFlags(LPUART0, intStatus);
+
+
+//	rm counter = 0;
+//	do {
+//		counter += 1;
+//		rx_char = ((uint32_t) (LPUART0->DATA));
+//	} while (!rx_char);
+
+//	while (!(LPUART0->DATA & LPUART_DATA_RXEMPT_MASK)) {
+//		rx_char = ((uint32_t) (LPUART0->DATA));
+//	} rm
+
+
+	rx_char = ((uint32_t) (LPUART0->DATA));
+
+
 
 	GPIO_PortToggle(GPIOA, 1u << 19U);
 	xStreamBufferSendFromISR(xStreamBuffer0, &rx_char, 1,

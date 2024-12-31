@@ -726,7 +726,7 @@
                            <setting name="enableMatchAddress2" value="false"/>
                            <setting name="matchAddress2" value="0"/>
                            <setting name="txFifoWatermark" value="0"/>
-                           <setting name="rxFifoWatermark" value="1"/>
+                           <setting name="rxFifoWatermark" value="0"/>
                            <setting name="enableRxRTS" value="false"/>
                            <setting name="enableTxCTS" value="false"/>
                            <setting name="txCtsSource" value="kLPUART_CtsSourcePin"/>
@@ -740,7 +740,7 @@
                      <config_set name="interruptsCfg">
                         <set name="interrupts">
                            <selected>
-                              <id>kLPUART_RxActiveEdgeInterruptEnable</id>
+                              <id>kLPUART_RxDataRegFullInterruptEnable</id>
                            </selected>
                         </set>
                         <struct name="interrupt_vectors">

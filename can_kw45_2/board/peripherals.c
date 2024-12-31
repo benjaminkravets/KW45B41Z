@@ -107,7 +107,7 @@ instance:
       - enableMatchAddress2: 'false'
       - matchAddress2: '0'
       - txFifoWatermark: '0'
-      - rxFifoWatermark: '1'
+      - rxFifoWatermark: '0'
       - enableRxRTS: 'false'
       - enableTxCTS: 'false'
       - txCtsSource: 'kLPUART_CtsSourcePin'
@@ -117,7 +117,7 @@ instance:
       - enableTx: 'true'
       - enableRx: 'true'
   - interruptsCfg:
-    - interrupts: 'kLPUART_RxActiveEdgeInterruptEnable'
+    - interrupts: 'kLPUART_RxDataRegFullInterruptEnable'
     - interrupt_vectors:
       - enable_rx_tx_irq: 'true'
       - interrupt_rx_tx:
@@ -135,7 +135,7 @@ const lpuart_config_t LPUART0_config = {
   .isMsb = false,
   .stopBitCount = kLPUART_OneStopBit,
   .txFifoWatermark = 0U,
-  .rxFifoWatermark = 1U,
+  .rxFifoWatermark = 0U,
   .enableRxRTS = false,
   .enableTxCTS = false,
   .txCtsSource = kLPUART_CtsSourcePin,
@@ -148,7 +148,7 @@ const lpuart_config_t LPUART0_config = {
 
 static void LPUART0_init(void) {
   LPUART_Init(LPUART0_PERIPHERAL, &LPUART0_config, LPUART0_CLOCK_SOURCE);
-  LPUART_EnableInterrupts(LPUART0_PERIPHERAL, kLPUART_RxActiveEdgeInterruptEnable);
+  LPUART_EnableInterrupts(LPUART0_PERIPHERAL, kLPUART_RxDataRegFullInterruptEnable);
   /* Enable interrupt LPUART0_SERIAL_RX_TX_IRQN request in the NVIC */
   EnableIRQ(LPUART0_SERIAL_RX_TX_IRQN);
 }
