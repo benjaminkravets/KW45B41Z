@@ -24,10 +24,16 @@
 
 /* TODO: insert other definitions and declarations here. */
 /* LPUART0_IRQn interrupt handler */
-uint8_t rx_char;
+uint8_t uart_rx_char;
 uint8_t counter = 0;
 #define COMMAND_BUFFER_LENGTH 10
 static StreamBufferHandle_t xStreamBuffer0 = NULL;
+
+flexcan_handle_t flexcanHandle;
+flexcan_frame_t tx_frame;
+flexcan_mb_transfer_t txXfer;
+
+volatile bool tx_complete = false;
 
 void delay(uint32_t n) {
 	volatile uint32_t i;
@@ -50,28 +56,12 @@ void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
 	 status = LPUART_ClearStatusFlags(LPUART0_PERIPHERAL, intStatus);
 	 */
 	/* Place your code here */
-	//FIFO bit 22 RXEMPT is not working, pole until not null
 	status_t status;
 	status = LPUART_ClearStatusFlags(LPUART0, intStatus);
+	uart_rx_char = ((uint32_t) (LPUART0->DATA));
 
-
-//	rm counter = 0;
-//	do {
-//		counter += 1;
-//		rx_char = ((uint32_t) (LPUART0->DATA));
-//	} while (!rx_char);
-
-//	while (!(LPUART0->DATA & LPUART_DATA_RXEMPT_MASK)) {
-//		rx_char = ((uint32_t) (LPUART0->DATA));
-//	} rm
-
-
-	rx_char = ((uint32_t) (LPUART0->DATA));
-
-
-
-	GPIO_PortToggle(GPIOA, 1u << 19U);
-	xStreamBufferSendFromISR(xStreamBuffer0, &rx_char, 1,
+	//GPIO_PortToggle(GPIOA, 1u << 19U);
+	xStreamBufferSendFromISR(xStreamBuffer0, &uart_rx_char, 1,
 			xHigherPriorityTaskWoken);
 
 	/* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
@@ -80,69 +70,127 @@ void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
     __DSB();
   #endif
 }
-static void commandReceiverTask() {
+
+void can0_callback(CAN_Type *base, flexcan_handle_t *handle, status_t status,
+		uint64_t result, void *userData) {
+	//GPIO_PortToggle(GPIOA, 1u << 19U);
+	switch (status) {
+	case kStatus_FLEXCAN_TxIdle:
+		tx_complete = 1;
+	default:
+		break;
+
+	}
+}
+
+static void CanSenderTask() {
 
 	PRINTF("Hello World\r\n");
 	uint8_t command_char;
-
+	FLEXCAN_TransferCreateHandle(CAN0, &flexcanHandle, can0_callback, NULL);
+	//GETCHAR();
 	while (1) {
-		//delay(1000000);
 		uint8_t transmitted_bytes = xStreamBufferReceive(xStreamBuffer0,
 				&command_char, 1, portMAX_DELAY);
-		GPIO_PortToggle(GPIOA, 1u << 19U);
 		PRINTF("Hello World!\r\n");
-		PRINTF("%i, %c, %i, %i received\r\n", counter, command_char, command_char, transmitted_bytes);
+		PRINTF("%i, %c, %i, %i received\r\n", counter, command_char,
+				command_char, transmitted_bytes);
 
+		for (uint32_t i = 0; i < 5; i++) {
+			tx_frame.id = FLEXCAN_ID_STD(0x123);
+			tx_frame.format = (uint8_t) kFLEXCAN_FrameFormatStandard;
+			tx_frame.type = (uint8_t) kFLEXCAN_FrameTypeData;
+			tx_frame.length = (uint8_t) 8;
+
+			tx_frame.dataByte0 = i;
+			tx_frame.dataByte1 = 98;
+			tx_frame.dataByte2 = 99;
+			tx_frame.dataByte3 = 100;
+			tx_frame.dataByte4 = 101;
+			tx_frame.dataByte5 = 102;
+			tx_frame.dataByte6 = 103;
+			tx_frame.dataByte7 = 104;
+
+			txXfer.mbIdx = (uint8_t) 1;
+			txXfer.frame = &tx_frame;
+
+			FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
+
+			while (!tx_complete) {
+			}
+			tx_complete = 0;
+		}
 	}
 }
 
-/*
- * @brief   Application entry point.
- */
-int main(void) {
-
-	/* Init board hardware. */
-	BOARD_InitBootPins();
-	BOARD_InitBootClocks();
-	BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-	/* Init FSL debug console. */
-	BOARD_InitDebugConsole();
-#endif
-	//don't let interrupt priority == 0
-	NVIC_SetPriority(LPUART0_IRQn, 10);
-	if (xTaskCreate(commandReceiverTask, "Command handler",
-	configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS) {
-		PRINTF("Task creation failed");
-		while (1)
-			;
-	}
-
-	xStreamBuffer0 = xStreamBufferCreate(COMMAND_BUFFER_LENGTH, 1);
-	if (xStreamBuffer0 == NULL) {
-		while (1)
-			;
-	}
-
-	vTaskStartScheduler();
-	while (1) {
-		delay(1000000);
+static void DebugReceiveTask() {
+	while(1){
+		delay(5000000);
 		GPIO_PortToggle(GPIOA, 1u << 19U);
-		PRINTF("Hello World\r\n");
-		PRINTF("%c %i %i \r\n", rx_char, rx_char, counter);
 
+		uint8_t command = 'a';
+		xStreamBufferSend(xStreamBuffer0, &command, 1, portMAX_DELAY);
 	}
 
-	//vTaskStartScheduler();
 
-	/* Force the counter to be placed into memory. */
-	volatile static int i = 0;
-	/* Enter an infinite loop, just incrementing a counter. */
-	while (1) {
-		i++;
-		/* 'Dummy' NOP to allow source level single stepping of
-		 tight while() loop */
-		__asm volatile ("nop");
-	}
-	return 0;
 }
+
+	/*
+	 * @brief   Application entry point.
+	 */
+	int main(void) {
+
+		/* Init board hardware. */
+		BOARD_InitBootPins();
+		BOARD_InitBootClocks();
+		BOARD_InitBootPeripherals();
+#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
+		/* Init FSL debug console. */
+		BOARD_InitDebugConsole();
+#endif
+		//don't let interrupt priority == 0
+		NVIC_SetPriority(LPUART0_IRQn, 10);
+		if (xTaskCreate(CanSenderTask, "UART handler",
+		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 2,
+				NULL) != pdPASS) {
+			PRINTF("Task creation failed");
+			while (1)
+				;
+		}
+
+		if (xTaskCreate(DebugReceiveTask, "Debug UART handler",
+		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1,
+				NULL) != pdPASS) {
+			PRINTF("Task creation failed");
+			while (1)
+				;
+		}
+
+		xStreamBuffer0 = xStreamBufferCreate(COMMAND_BUFFER_LENGTH, 1);
+		if (xStreamBuffer0 == NULL) {
+			while (1)
+				;
+		}
+
+		vTaskStartScheduler();
+		while (1) {
+			delay(1000000);
+			GPIO_PortToggle(GPIOA, 1u << 19U);
+			PRINTF("Hello World\r\n");
+			PRINTF("%c %i %i \r\n", uart_rx_char, uart_rx_char, counter);
+
+		}
+
+		//vTaskStartScheduler();
+
+		/* Force the counter to be placed into memory. */
+		volatile static int i = 0;
+		/* Enter an infinite loop, just incrementing a counter. */
+		while (1) {
+			i++;
+			/* 'Dummy' NOP to allow source level single stepping of
+			 tight while() loop */
+			__asm volatile ("nop");
+		}
+		return 0;
+	}

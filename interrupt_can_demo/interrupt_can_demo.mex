@@ -725,7 +725,7 @@
                            <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
                            <setting name="wakeupSrc" value="kFLEXCAN_WakeupSrcUnfiltered"/>
                            <setting name="flexibleDataRate" value="false"/>
-                           <setting name="baudRate" value="500000"/>
+                           <setting name="baudRate" value="100000"/>
                            <setting name="baudRateFD" value="2000000"/>
                            <setting name="enableBRS" value="false"/>
                            <setting name="dataSize" value="kFLEXCAN_8BperMB"/>

@@ -107,6 +107,7 @@ outputs:
 - {id: CPU_CLK.outFreq, value: 96 MHz}
 - {id: FIRC_CLK.outFreq, value: 96 MHz}
 - {id: FRO16K_CLK.outFreq, value: 16 kHz}
+- {id: MRCC.MRCC_CAN0_CLK.outFreq, value: 32 MHz}
 - {id: MRCC.MRCC_LPUART0_CLK.outFreq, value: 16 MHz}
 - {id: RADIO_FRO192M_CLK.outFreq, value: 32 MHz}
 - {id: RADIO_FRO192M_FRODIV_CLK.outFreq, value: 16 MHz}
@@ -125,6 +126,7 @@ settings:
 - {id: CCM32K_OSC32K_CTRL_EXTAL_CAP_SEL_CFG, value: 8PF}
 - {id: CCM32K_OSC32K_CTRL_OSC_EN_CFG, value: Enabled}
 - {id: CCM32K_OSC32K_CTRL_XTAL_CAP_SEL_CFG, value: 8PF}
+- {id: MRCC.MRCC_CAN0_SEL.sel, value: SCG.SOSC_CLK}
 - {id: MRCC.MRCC_LPUART0_DIV.scale, value: '2', locked: true}
 - {id: MRCC.MRCC_LPUART0_SEL.sel, value: SCG.SOSC_CLK}
 - {id: SCG.DIVCORE.scale, value: '1', locked: true}
@@ -262,4 +264,8 @@ void BOARD_BootClockRUN(void)
     CLOCK_SetIpSrc(kCLOCK_Lpuart0, kCLOCK_IpSrcSoscClk);
     /* Set MRCC LPUART0 fraction divider */
     CLOCK_SetIpSrcDiv(kCLOCK_Lpuart0, kSCG_SysClkDivBy2);
+    /* Set MRCC CAN0 selection */
+    CLOCK_SetIpSrc(kCLOCK_Can0, kCLOCK_IpSrcSoscClk);
+    /* Set MRCC CAN0 fraction divider */
+    CLOCK_SetIpSrcDiv(kCLOCK_Can0, kSCG_SysClkDivBy1);
 }

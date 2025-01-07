@@ -101,6 +101,8 @@ BOARD_InitPins:
     direction: OUTPUT}
   - {pin_num: '11', peripheral: LPUART0, signal: RX, pin_signal: ADC0_A12/PTA16/RF_NOT_ALLOWED/LPSPI0_PCS0/EWM0_OUT_b/LPI2C0_SCLS/TPM0_CH4/LPUART0_RX/RF_GPO_8/FLEXIO0_D5,
     identifier: UART0_RX}
+  - {pin_num: '42', peripheral: CAN0, signal: TX, pin_signal: PTC4/WUU0_P10/LPSPI1_SIN/CAN0_TX/LPI2C1_SCL/TPM2_CH0/FLEXIO0_D20}
+  - {pin_num: '43', peripheral: CAN0, signal: RX, pin_signal: PTC5/LPSPI1_PCS0/CAN0_RX/LPI2C1_SDA/TPM1_CH4/TPM2_CH1/FLEXIO0_D21}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -117,6 +119,8 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_GpioA);
     /* Clock Configuration: Peripheral clocks are enabled; module does not stall low power mode entry */
     CLOCK_EnableClock(kCLOCK_PortA);
+    /* Clock Configuration: Peripheral clocks are enabled; module does not stall low power mode entry */
+    CLOCK_EnableClock(kCLOCK_PortC);
 
     gpio_pin_config_t LED_GREEN_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -133,6 +137,12 @@ void BOARD_InitPins(void)
 
     /* PORTA19 (pin 14) is configured as PTA19 */
     PORT_SetPinMux(BOARD_INITPINS_LED_GREEN_PORT, BOARD_INITPINS_LED_GREEN_PIN, kPORT_MuxAsGpio);
+
+    /* PORTC4 (pin 42) is configured as CAN0_TX */
+    PORT_SetPinMux(BOARD_INITPINS_CAN_TX_PORT, BOARD_INITPINS_CAN_TX_PIN, kPORT_MuxAlt3);
+
+    /* PORTC5 (pin 43) is configured as CAN0_RX */
+    PORT_SetPinMux(BOARD_INITPINS_CAN_RX_PORT, BOARD_INITPINS_CAN_RX_PIN, kPORT_MuxAlt3);
 }
 
 /* clang-format off */

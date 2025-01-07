@@ -31,16 +31,16 @@ void delay(uint32_t n) {
 }
 
 /* CAN0_IRQn interrupt handler */
-void CAN0_FLEXCAN_IRQHANDLER(void) {
-  /*  Place your code here */
-  uint32_t flags = FLEXCAN_GetStatusFlags(CAN0);
-  FLEXCAN_ClearStatusFlags(CAN0, flags);
-  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
-     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
-  #if defined __CORTEX_M && (__CORTEX_M == 4U)
-    __DSB();
-  #endif
-}
+//void CAN0_FLEXCAN_IRQHANDLER(void) {
+//  /*  Place your code here */
+//  uint32_t flags = FLEXCAN_GetStatusFlags(CAN0);
+//  FLEXCAN_ClearStatusFlags(CAN0, flags);
+//  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+//     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+//  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+//    __DSB();
+//  #endif
+//}
 
 void can0_callback(CAN_Type *base, flexcan_handle_t *handle, status_t status, uint64_t result, void *userData)
 {
@@ -67,26 +67,28 @@ int main(void) {
 
 
 
-    //while(1){
+    while(1){
+    	//GETCHAR();
         tx_frame.id		= FLEXCAN_ID_STD(0x123);
         tx_frame.format	= (uint8_t)kFLEXCAN_FrameFormatStandard;
         tx_frame.type	= (uint8_t)kFLEXCAN_FrameTypeData;
         tx_frame.length	= (uint8_t)8;
-        tx_frame.dataByte3 = 0;
-        tx_frame.dataByte4 = 0;
-        tx_frame.dataByte5 = 0;
-        tx_frame.dataByte6 = 0;
-        tx_frame.dataByte7 = 0;
 
-        tx_frame.dataByte0 = 0x65;
-        tx_frame.dataByte1 = 0x97;
 
+        tx_frame.dataByte0 = 97;
+        tx_frame.dataByte1 = 98;
+        tx_frame.dataByte2 = 99;
+        tx_frame.dataByte3 = 100;
+        tx_frame.dataByte4 = 101;
+        tx_frame.dataByte5 = 102;
+        tx_frame.dataByte6 = 103;
+        tx_frame.dataByte7 = 104;
 
         txXfer.mbIdx = (uint8_t)1;
         txXfer.frame = &tx_frame;
     	FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
-    	//delay(1000000);
-    //}
+    	delay(1000000);
+    }
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;

@@ -12,6 +12,7 @@
 #include "fsl_common.h"
 #include "fsl_lpuart.h"
 #include "fsl_clock.h"
+#include "fsl_flexcan.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -29,11 +30,18 @@ extern "C" {
 #define LPUART0_SERIAL_RX_TX_IRQN LPUART0_IRQn
 /* LPUART0 interrupt handler identifier. */
 #define LPUART0_SERIAL_RX_TX_IRQHANDLER LPUART0_IRQHandler
+/* Definition of peripheral ID */
+#define CAN0_PERIPHERAL CAN0
+/* Definition of the clock source frequency */
+#define CAN0_CLOCK_SOURCE 32000000UL
 
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
 extern const lpuart_config_t LPUART0_config;
+extern const flexcan_config_t CAN0_config;
+/* Message buffer 0 configuration structure */
+extern const flexcan_rx_mb_config_t CAN0_rx_mb_config_0;
 
 /***********************************************************************************************************************
  * Initialization functions

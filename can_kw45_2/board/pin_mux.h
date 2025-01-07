@@ -56,6 +56,24 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_UART0_RX_PIN_MASK (1U << 16U)      /*!<@brief PORT pin mask */
                                                           /* @} */
 
+/*! @name PORTC4 (number 42), U8[4]/J1[3]/J13[1]/CAN0_TX
+  @{ */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_CAN_TX_PORT PORTC               /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_CAN_TX_PIN 4U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_CAN_TX_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
+                                                       /* @} */
+
+/*! @name PORTC5 (number 43), U5[4]/J1[4]/CAN0_RX
+  @{ */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_CAN_RX_PORT PORTC               /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_CAN_RX_PIN 5U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_CAN_RX_PIN_MASK (1U << 5U)      /*!<@brief PORT pin mask */
+                                                       /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

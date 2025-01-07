@@ -92,6 +92,11 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="CAN0" description="Peripheral CAN0 signals are routed in the Pins Tool, but the peripheral is not initialized in the Peripherals Tool." problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="cm33">
                         <data>true</data>
@@ -125,6 +130,8 @@
                         <pin_feature name="identifier" value="UART0_RX"/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="CAN0" signal="TX" pin_num="42" pin_signal="PTC4/WUU0_P10/LPSPI1_SIN/CAN0_TX/LPI2C1_SCL/TPM2_CH0/FLEXIO0_D20"/>
+                  <pin peripheral="CAN0" signal="RX" pin_num="43" pin_signal="PTC5/LPSPI1_PCS0/CAN0_RX/LPI2C1_SDA/TPM1_CH4/TPM2_CH1/FLEXIO0_D21"/>
                </pins>
             </function>
             <function name="BOARD_InitLEDsPins">
@@ -618,6 +625,7 @@
                   <clock_output id="CPU_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="FIRC_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="FRO16K_CLK.outFreq" value="16 kHz" locked="false" accuracy=""/>
+                  <clock_output id="MRCC.MRCC_CAN0_CLK.outFreq" value="32 MHz" locked="false" accuracy=""/>
                   <clock_output id="MRCC.MRCC_LPUART0_CLK.outFreq" value="16 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_CLK.outFreq" value="32 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_FRODIV_CLK.outFreq" value="16 MHz" locked="false" accuracy=""/>
@@ -637,6 +645,7 @@
                   <setting id="CCM32K_OSC32K_CTRL_EXTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_OSC_EN_CFG" value="Enabled" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_XTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
+                  <setting id="MRCC.MRCC_CAN0_SEL.sel" value="SCG.SOSC_CLK" locked="false"/>
                   <setting id="MRCC.MRCC_LPUART0_DIV.scale" value="2" locked="true"/>
                   <setting id="MRCC.MRCC_LPUART0_SEL.sel" value="SCG.SOSC_CLK" locked="false"/>
                   <setting id="SCG.DIVCORE.scale" value="1" locked="true"/>
@@ -666,6 +675,16 @@
             <dependency resourceType="SWComponent" resourceId="platform.drivers.lpuart" description="An unsupported version of the LPUART Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
                <feature name="version" evaluation="equivalent">
                   <data type="Version">2.8.1</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexcan" description="FLEXCAN Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexcan" description="An unsupported version of the FLEXCAN Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="greaterOrEqual">
+                  <data type="Version" maxValue="2.11.9">2.10.0</data>
                </feature>
             </dependency>
             <dependency resourceType="Tool" resourceId="Clocks" description="The Clocks tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
@@ -699,6 +718,26 @@
                   <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPUART0.uart_rx" description="Signal RX is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="routed" evaluation="equal">
                         <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="CAN0.can_rxd" description="Signal RX is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="CAN0.can_txd" description="Signal TX is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="MRCC.MRCC_CAN0_CLK" description="CAN0 clock is inactive." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="MRCC.MRCC_CAN0_CLK" description="CAN0 clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
                      </feature>
                   </dependency>
                </dependencies>
@@ -752,6 +791,158 @@
                               <setting name="priority" value="0"/>
                               <setting name="enable_custom_name" value="false"/>
                            </struct>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="CAN0" uuid="89f79d80-0635-4b72-9b68-cb24281e05e4" type="flexcan" type_id="flexcan_2.10.0" mode="interrupts" peripheral="CAN0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="interruptsCfg">
+                        <setting name="messageBufferIrqs" value="0"/>
+                        <set name="interruptsEnable">
+                           <selected/>
+                        </set>
+                        <setting name="enable_irq" value="false"/>
+                        <struct name="interrupt_shared">
+                           <setting name="IRQn" value="CAN0_IRQn"/>
+                           <setting name="enable_interrrupt" value="enabled"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                     </config_set>
+                     <config_set name="fsl_flexcan">
+                        <struct name="can_config">
+                           <setting name="clockSource" value="kFLEXCAN_ClkSrcOsc"/>
+                           <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
+                           <setting name="wakeupSrc" value="kFLEXCAN_WakeupSrcUnfiltered"/>
+                           <setting name="flexibleDataRate" value="false"/>
+                           <setting name="baudRate" value="100000"/>
+                           <setting name="baudRateFD" value="2000000"/>
+                           <setting name="enableBRS" value="false"/>
+                           <setting name="dataSize" value="kFLEXCAN_8BperMB"/>
+                           <setting name="maxMbNum" value="16"/>
+                           <setting name="enableLoopBack" value="false"/>
+                           <setting name="enableTimerSync" value="true"/>
+                           <setting name="enableSelfWakeup" value="false"/>
+                           <setting name="enableIndividMask" value="false"/>
+                           <setting name="disableSelfReception" value="false"/>
+                           <setting name="enableListenOnlyMode" value="false"/>
+                           <setting name="enableDoze" value="false"/>
+                           <setting name="enableTransceiverDelayMeasure" value="true"/>
+                           <struct name="timingConfig">
+                              <setting name="phaseSeg1" value="4"/>
+                              <setting name="phaseSeg2" value="3"/>
+                              <setting name="rJumpwidth" value="2"/>
+                              <struct name="bitTime"/>
+                              <setting name="fphaseSeg1" value="4"/>
+                              <setting name="fphaseSeg2" value="4"/>
+                              <setting name="frJumpwidth" value="2"/>
+                              <struct name="fbitTime"/>
+                           </struct>
+                        </struct>
+                        <setting name="enableRxFifoDMA" value="false"/>
+                        <setting name="enableRxFIFO" value="false"/>
+                        <struct name="rxFIFO">
+                           <setting name="idFilterTable" value=""/>
+                           <setting name="idFilterNum" value="num0"/>
+                           <setting name="idFilterType" value="kFLEXCAN_RxFifoFilterTypeA"/>
+                           <setting name="priority" value="kFLEXCAN_RxFifoPrioLow"/>
+                        </struct>
+                        <setting name="enableEnhancedRxFIFO" value="false"/>
+                        <struct name="enhancedRxFIFO">
+                           <setting name="idFilterTable" value=""/>
+                           <setting name="idFilterPairNum" value="2"/>
+                           <setting name="extendIdFilterNum" value="0"/>
+                           <setting name="fifoWatermarkSelection" value="1"/>
+                           <setting name="dmaPerReadLength" value="kFLEXCAN_1WordPerRead"/>
+                           <setting name="priority" value="kFLEXCAN_RxFifoPrioLow"/>
+                        </struct>
+                        <array name="channels">
+                           <struct name="0">
+                              <setting name="mbID" value="0"/>
+                              <setting name="mbType" value="mbRx"/>
+                              <struct name="rxMb">
+                                 <setting name="id" value="0"/>
+                                 <setting name="format" value="kFLEXCAN_FrameFormatStandard"/>
+                                 <setting name="type" value="kFLEXCAN_FrameTypeData"/>
+                              </struct>
+                           </struct>
+                           <struct name="1">
+                              <setting name="mbID" value="1"/>
+                              <setting name="mbType" value="mbTx"/>
+                              <struct name="rxMb">
+                                 <setting name="id" value="0"/>
+                                 <setting name="format" value="kFLEXCAN_FrameFormatStandard"/>
+                                 <setting name="type" value="kFLEXCAN_FrameTypeData"/>
+                              </struct>
+                           </struct>
+                        </array>
+                        <setting name="enablePNConfig" value="false"/>
+                        <struct name="pn_config">
+                           <setting name="enableTimeout" value="false"/>
+                           <setting name="inputTimeoutValue" value="0"/>
+                           <setting name="enableMatch" value="false"/>
+                           <setting name="matchSrc" value="kFLEXCAN_PNMatSrcID"/>
+                           <setting name="matchNum" value="1"/>
+                           <setting name="idMatchMode" value="kFLEXCAN_PNMatModeEqual"/>
+                           <setting name="dataMatchMode" value="kFLEXCAN_PNMatModeEqual"/>
+                           <setting name="idFilterIDE" value="kFLEXCAN_FrameFormatStandard"/>
+                           <setting name="idFilterRTR" value="kFLEXCAN_DataFrameType"/>
+                           <setting name="idLowerValue" value="0"/>
+                           <setting name="idUpperValue" value="0"/>
+                           <setting name="lengthLower" value="0"/>
+                           <setting name="lengthUpper" value="0"/>
+                           <array name="payloadLower">
+                              <struct name="0">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="1">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="2">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="3">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="4">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="5">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="6">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="7">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                           </array>
+                           <array name="payloadUpper">
+                              <struct name="0">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="1">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="2">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="3">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="4">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="5">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="6">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                              <struct name="7">
+                                 <setting name="byte" value="0"/>
+                              </struct>
+                           </array>
                         </struct>
                      </config_set>
                   </instance>
