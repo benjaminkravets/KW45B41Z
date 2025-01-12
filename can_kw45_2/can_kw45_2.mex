@@ -847,14 +847,14 @@
                            <setting name="idFilterType" value="kFLEXCAN_RxFifoFilterTypeA"/>
                            <setting name="priority" value="kFLEXCAN_RxFifoPrioLow"/>
                         </struct>
-                        <setting name="enableEnhancedRxFIFO" value="false"/>
+                        <setting name="enableEnhancedRxFIFO" value="true"/>
                         <struct name="enhancedRxFIFO">
-                           <setting name="idFilterTable" value=""/>
-                           <setting name="idFilterPairNum" value="2"/>
+                           <setting name="idFilterTable" value="EnRxTableId"/>
+                           <setting name="idFilterPairNum" value="4"/>
                            <setting name="extendIdFilterNum" value="0"/>
                            <setting name="fifoWatermarkSelection" value="1"/>
                            <setting name="dmaPerReadLength" value="kFLEXCAN_1WordPerRead"/>
-                           <setting name="priority" value="kFLEXCAN_RxFifoPrioLow"/>
+                           <setting name="priority" value="kFLEXCAN_RxFifoPrioHigh"/>
                         </struct>
                         <array name="channels">
                            <struct name="0">

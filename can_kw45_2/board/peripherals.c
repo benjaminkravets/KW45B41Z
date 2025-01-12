@@ -212,14 +212,14 @@ instance:
       - idFilterNum: 'num0'
       - idFilterType: 'kFLEXCAN_RxFifoFilterTypeA'
       - priority: 'kFLEXCAN_RxFifoPrioLow'
-    - enableEnhancedRxFIFO: 'false'
+    - enableEnhancedRxFIFO: 'true'
     - enhancedRxFIFO:
-      - idFilterTable: ''
-      - idFilterPairNum: '2'
+      - idFilterTable: 'EnRxTableId'
+      - idFilterPairNum: '4'
       - extendIdFilterNum: '0'
       - fifoWatermarkSelection: '1'
       - dmaPerReadLength: 'kFLEXCAN_1WordPerRead'
-      - priority: 'kFLEXCAN_RxFifoPrioLow'
+      - priority: 'kFLEXCAN_RxFifoPrioHigh'
     - channels:
       - 0:
         - mbID: '0'
@@ -315,9 +315,18 @@ const flexcan_rx_mb_config_t CAN0_rx_mb_config_0 = {
   .format = kFLEXCAN_FrameFormatStandard,
   .type = kFLEXCAN_FrameTypeData
 };
+flexcan_enhanced_rx_fifo_config_t CAN0_enhanced_rx_fifo_config = {
+  .idFilterPairNum = 1,
+  .extendIdFilterNum = 0,
+  .fifoWatermark = 0,
+  .dmaPerReadLength = kFLEXCAN_1WordPerRead,
+  .priority = kFLEXCAN_RxFifoPrioHigh
+};
 
 static void CAN0_init(void) {
   FLEXCAN_Init(CAN0_PERIPHERAL, &CAN0_config, CAN0_CLOCK_SOURCE);
+  CAN0_enhanced_rx_fifo_config.idFilterTable = EnRxTableId;
+  FLEXCAN_SetEnhancedRxFifoConfig(CAN0_PERIPHERAL, &CAN0_enhanced_rx_fifo_config, true);
   /* Message buffer 0 initialization */
   FLEXCAN_SetRxMbConfig(CAN0_PERIPHERAL, 0, &CAN0_rx_mb_config_0, true);
   /* Message buffer 1 initialization */

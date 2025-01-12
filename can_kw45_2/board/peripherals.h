@@ -42,6 +42,8 @@ extern const lpuart_config_t LPUART0_config;
 extern const flexcan_config_t CAN0_config;
 /* Message buffer 0 configuration structure */
 extern const flexcan_rx_mb_config_t CAN0_rx_mb_config_0;
+extern flexcan_enhanced_rx_fifo_config_t CAN0_enhanced_rx_fifo_config;
+extern void * EnRxTableId;
 
 /***********************************************************************************************************************
  * Initialization functions
