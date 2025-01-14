@@ -77,7 +77,14 @@ void can0_callback(CAN_Type *base, flexcan_handle_t *handle, status_t status,
 		break;
 	case kStatus_FLEXCAN_RxFifoIdle:
 		rx_complete = 1;
-
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte0, 1, 0);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte1, 1, 0);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte2, 1, 0);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte3, 1, 0);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte4, 1, 0);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte5, 1, 0);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte6, 1, 0);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte7, 1, 0);
 	default:
 		break;
 
@@ -130,16 +137,10 @@ static void CanSenderTask() {
 }
 
 static void CanReceiverTask() {
-
-
-
-	while(1) {
-		FLEXCAN_TransferReceiveEnhancedFifoNonBlocking(CAN0, &flexcanHandle, &rxFifoXfer);
-//		while(!rx_complete){
-//
-//		}
-//		rx_complete = 0;
-		vTaskDelay(10000);
+	uint8_t rx_char;
+	while(1){
+		xStreamBufferReceive(xStreamBuffer1, &rx_char, 1, portMAX_DELAY);
+		PRINTF("Received: %i \r\n", rx_char);
 	}
 }
 
@@ -162,7 +163,8 @@ static void DebugReceiveTask() {
 		uint32_t test[] = {FLEXCAN_ENHANCED_RX_FIFO_STD_MASK_AND_FILTER(0x321, 0, 0x3F, 0),
                 		   FLEXCAN_ENHANCED_RX_FIFO_STD_MASK_AND_FILTER(0x321, 0, 0x3F, 0),
 						   FLEXCAN_ENHANCED_RX_FIFO_STD_MASK_AND_FILTER(0x321, 0, 0x3F, 0),
-						   FLEXCAN_ENHANCED_RX_FIFO_STD_MASK_AND_FILTER(0x321, 0, 0x3F, 0),};
+						   FLEXCAN_ENHANCED_RX_FIFO_STD_MASK_AND_FILTER(0x321, 0, 0x3F, 0),
+		};
 		EnRxTableId = (void *)test;
 
 		/* Init board hardware. */
@@ -187,13 +189,13 @@ static void DebugReceiveTask() {
 				;
 		}
 
-//		if (xTaskCreate(CanReceiverTask, "CanReceiverTask",
-//		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 2,
-//				NULL) != pdPASS) {
-//			PRINTF("Task creation failed");
-//			while (1)
-//				;
-//		}
+		if (xTaskCreate(CanReceiverTask, "CanReceiverTask",
+		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1,
+				NULL) != pdPASS) {
+			PRINTF("Task creation failed");
+			while (1)
+				;
+		}
 
 		if (xTaskCreate(DebugReceiveTask, "DebugReceiveTask",
 		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1,
