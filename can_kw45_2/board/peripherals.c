@@ -334,6 +334,74 @@ static void CAN0_init(void) {
 }
 
 /***********************************************************************************************************************
+ * LPIT0 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'LPIT0'
+- type: 'lpit'
+- mode: 'LPIT_GENERAL'
+- custom_name_enabled: 'false'
+- type_id: 'lpit_2.0.0'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'LPIT0'
+- config_sets:
+  - fsl_lpit:
+    - lpitConfig:
+      - enableRunInDebug: 'false'
+      - enableRunInDoze: 'false'
+    - timingConfig:
+      - clockSource: 'AsyncPeripheralClock'
+      - clockSourceFreq: 'ClocksTool_DefaultInit'
+    - channels:
+      - 0:
+        - lpitChannelPrefixID: 'Channel_0'
+        - channelNumber: '0'
+        - enableChain: 'false'
+        - timerMode: 'kLPIT_PeriodicCounter'
+        - timerPeriod: '1s'
+        - lpit_trigger_select_t: 'TRG_CH.0'
+        - enableReloadOnTriggerBool: 'false'
+        - enableStopOnTimeout: 'false'
+        - enableStartOnTriggerBool: 'false'
+        - startTimer: 'true'
+        - enableInterrupt: 'false'
+    - enableSharedInterrupt: 'false'
+    - sharedInterrupt:
+      - IRQn: 'LPIT0_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const lpit_chnl_params_t LPIT0_Channel_0_struct = {
+  .chainChannel = false,
+  .timerMode = kLPIT_PeriodicCounter,
+  .triggerSource = kLPIT_TriggerSource_External,
+  .triggerSelect = kLPIT_Trigger_TimerChn0,
+  .enableReloadOnTrigger = false,
+  .enableStopOnTimeout = false,
+  .enableStartOnTrigger = false
+};
+const lpit_config_t LPIT0_config = {
+  .enableRunInDebug = false,
+  .enableRunInDoze = false
+};
+
+static void LPIT0_init(void) {
+  /* Initialize the LPIT. */
+  LPIT_Init(LPIT0_PERIPHERAL, &LPIT0_config);
+  /* Setup channel 0. */
+  LPIT_SetupChannel(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0, &LPIT0_Channel_0_struct);
+  /* Set channel 0 period to 6000000 ticks. */
+  LPIT_SetTimerPeriod(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0, LPIT0_CHANNEL_0_TICKS);
+  /* Start channel 0. */
+  LPIT_StartTimer(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -341,6 +409,7 @@ void BOARD_InitPeripherals(void)
   /* Initialize components */
   LPUART0_init();
   CAN0_init();
+  LPIT0_init();
 }
 
 /***********************************************************************************************************************

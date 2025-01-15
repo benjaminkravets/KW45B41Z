@@ -28,22 +28,23 @@
 uint8_t uart_rx_char;
 uint8_t counter = 0;
 #define COMMAND_BUFFER_LENGTH 10
+#define RX_BUFFER_LENGTH 64
+
 static StreamBufferHandle_t xStreamBuffer0 = NULL;
 static StreamBufferHandle_t xStreamBuffer1 = NULL;
 
 
-flexcan_handle_t flexcanHandle;
+flexcan_handle_t flexcan_handle;
 flexcan_frame_t tx_frame;
 flexcan_frame_t rx_frame[1];
 flexcan_fd_frame_t rx_frame_fd[1];
 
-flexcan_mb_transfer_t txXfer;
-flexcan_fifo_transfer_t rxFifoXfer;
+flexcan_mb_transfer_t tx_mb_frame;
+flexcan_fifo_transfer_t rx_fifo_frame;
 
-volatile bool tx_complete = false;
-volatile bool rx_complete = false;
+uint32_t TxComplete = 0;
+uint32_t RxComplete = 0;
 
-//uint32_t EnRxTableId = FLEXCAN_ENHANCED_RX_FIFO_EXT_MASK_AND_FILTER(0x321, 0, 0x3F, 0);
 void * EnRxTableId;
 
 void delay(uint32_t n) {
@@ -73,18 +74,18 @@ void can0_callback(CAN_Type *base, flexcan_handle_t *handle, status_t status,
 		uint64_t result, void *userData) {
 	switch (status) {
 	case kStatus_FLEXCAN_TxIdle:
-		tx_complete = 1;
+		TxComplete = 1;
 		break;
 	case kStatus_FLEXCAN_RxFifoIdle:
-		rx_complete = 1;
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte0, 1, 0);
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte1, 1, 0);
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte2, 1, 0);
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte3, 1, 0);
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte4, 1, 0);
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte5, 1, 0);
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte6, 1, 0);
-		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte7, 1, 0);
+		RxComplete = 1;
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte0, 1, 1000);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte1, 1, 1000);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte2, 1, 1000);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte3, 1, 1000);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte4, 1, 1000);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte5, 1, 1000);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte6, 1, 1000);
+		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte7, 1, 1000);
 	default:
 		break;
 
@@ -108,30 +109,42 @@ static void CanSenderTask() {
 			tx_frame.type = (uint8_t) kFLEXCAN_FrameTypeData;
 			tx_frame.length = (uint8_t) 8;
 
-			tx_frame.dataByte0 = i;
-			tx_frame.dataByte1 = 98;
-			tx_frame.dataByte2 = 99;
-			tx_frame.dataByte3 = 100;
-			tx_frame.dataByte4 = 101;
-			tx_frame.dataByte5 = 102;
-			tx_frame.dataByte6 = 103;
-			tx_frame.dataByte7 = 104;
+			tx_frame.dataByte0 = 0 + i * 8;
+			tx_frame.dataByte1 = 1 + i * 8;
+			tx_frame.dataByte2 = 2 + i * 8;
+			tx_frame.dataByte3 = 3 + i * 8;
+			tx_frame.dataByte4 = 4 + i * 8;
+			tx_frame.dataByte5 = 5 + i * 8;
+			tx_frame.dataByte6 = 6 + i * 8;
+			tx_frame.dataByte7 = 7 + i * 8;
 
-			txXfer.mbIdx = (uint8_t) 1;
-			txXfer.frame = &tx_frame;
+//			//This can be used instead of per byte accesses
+//			uint8_t init[8] = {3, 2, 1, 0, 7, 6, 5, 4};
+//			for (uint32_t x = 0; x < 8; x++) {
+//				((uint8_t*)&tx_frame.dataByte3)[init[x]] = x + i * 8;
+//			}
 
-			FLEXCAN_TransferSendNonBlocking(CAN0, &flexcanHandle, &txXfer);
 
-			while (!tx_complete) {
+			tx_mb_frame.mbIdx = (uint8_t) 1;
+			tx_mb_frame.frame = &tx_frame;
+
+			FLEXCAN_TransferSendNonBlocking(CAN0, &flexcan_handle, &tx_mb_frame);
+
+			while (!TxComplete) {
 			}
-			tx_complete = 0;
+			TxComplete = 0;
 
 			//Flexcantr
 		}
-		rxFifoXfer.frame = &rx_frame[0];
-		rxFifoXfer.framefd = &rx_frame_fd[0];
-		rxFifoXfer.frameNum = 1;
-		ret = FLEXCAN_TransferReceiveEnhancedFifoNonBlocking(CAN0, &flexcanHandle, &rxFifoXfer);
+		rx_fifo_frame.frame = &rx_frame[0];
+		rx_fifo_frame.framefd = &rx_frame_fd[0];
+		rx_fifo_frame.frameNum = 1;
+		for(uint32_t i = 0; i < 8; i++){
+			ret = FLEXCAN_TransferReceiveEnhancedFifoNonBlocking(CAN0, &flexcan_handle, &rx_fifo_frame);
+			while (!RxComplete){
+
+			}
+		}
 
 	}
 }
@@ -178,7 +191,7 @@ static void DebugReceiveTask() {
 		//don't let interrupt priority == 0
 		NVIC_SetPriority(LPUART0_IRQn, 10);
 
-		FLEXCAN_TransferCreateHandle(CAN0, &flexcanHandle, can0_callback, NULL);
+		FLEXCAN_TransferCreateHandle(CAN0, &flexcan_handle, can0_callback, NULL);
 
 
 		if (xTaskCreate(CanSenderTask, "CanSenderTask",
@@ -190,7 +203,7 @@ static void DebugReceiveTask() {
 		}
 
 		if (xTaskCreate(CanReceiverTask, "CanReceiverTask",
-		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1,
+		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 2,
 				NULL) != pdPASS) {
 			PRINTF("Task creation failed");
 			while (1)
@@ -211,22 +224,14 @@ static void DebugReceiveTask() {
 				;
 		}
 
-		xStreamBuffer1 = xStreamBufferCreate(COMMAND_BUFFER_LENGTH, 1);
+		xStreamBuffer1 = xStreamBufferCreate(RX_BUFFER_LENGTH, 1);
 		if (xStreamBuffer1 == NULL) {
 			while (1)
 				;
 		}
 
 		vTaskStartScheduler();
-		while (1) {
-			delay(1000000);
-			GPIO_PortToggle(GPIOA, 1u << 19U);
-			PRINTF("Hello World\r\n");
-			PRINTF("%c %i %i \r\n", uart_rx_char, uart_rx_char, counter);
 
-		}
-
-		//vTaskStartScheduler();
 
 		/* Force the counter to be placed into memory. */
 		volatile static int i = 0;

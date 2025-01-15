@@ -626,6 +626,7 @@
                   <clock_output id="FIRC_CLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
                   <clock_output id="FRO16K_CLK.outFreq" value="16 kHz" locked="false" accuracy=""/>
                   <clock_output id="MRCC.MRCC_CAN0_CLK.outFreq" value="32 MHz" locked="false" accuracy=""/>
+                  <clock_output id="MRCC.MRCC_LPIT0_CLK.outFreq" value="6 MHz" locked="false" accuracy=""/>
                   <clock_output id="MRCC.MRCC_LPUART0_CLK.outFreq" value="16 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_CLK.outFreq" value="32 MHz" locked="false" accuracy=""/>
                   <clock_output id="RADIO_FRO192M_FRODIV_CLK.outFreq" value="16 MHz" locked="false" accuracy=""/>
@@ -646,6 +647,7 @@
                   <setting id="CCM32K_OSC32K_CTRL_OSC_EN_CFG" value="Enabled" locked="false"/>
                   <setting id="CCM32K_OSC32K_CTRL_XTAL_CAP_SEL_CFG" value="8PF" locked="false"/>
                   <setting id="MRCC.MRCC_CAN0_SEL.sel" value="SCG.SOSC_CLK" locked="false"/>
+                  <setting id="MRCC.MRCC_LPIT0_SEL.sel" value="SCG.SIRC_CLK" locked="false"/>
                   <setting id="MRCC.MRCC_LPUART0_DIV.scale" value="2" locked="true"/>
                   <setting id="MRCC.MRCC_LPUART0_SEL.sel" value="SCG.SOSC_CLK" locked="false"/>
                   <setting id="SCG.DIVCORE.scale" value="1" locked="true"/>
@@ -685,6 +687,21 @@
             <dependency resourceType="SWComponent" resourceId="platform.drivers.flexcan" description="An unsupported version of the FLEXCAN Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
                <feature name="version" evaluation="greaterOrEqual">
                   <data type="Version" maxValue="2.11.9">2.10.0</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpit" description="LPIT Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpit" description="An unsupported version of the LPIT Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="greaterOrEqual">
+                  <data type="Version" maxValue="2.1.9">2.0.0</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="Tool" resourceId="Pins" description="The Pins tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data>true</data>
                </feature>
             </dependency>
             <dependency resourceType="Tool" resourceId="Clocks" description="The Clocks tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
@@ -738,6 +755,16 @@
                   <dependency resourceType="ClockOutput" resourceId="MRCC.MRCC_CAN0_CLK" description="CAN0 clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="frequency" evaluation="greaterThan">
                         <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="MRCC.MRCC_LPIT0_CLK" description="LPIT0 clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPIT0.lpit_ext_trig.0" description="Signal TRG_CH.0 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
                      </feature>
                   </dependency>
                </dependencies>
@@ -943,6 +970,41 @@
                                  <setting name="byte" value="0"/>
                               </struct>
                            </array>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="LPIT0" uuid="85b92c83-f4b5-4f44-a8a4-8692cfa65bd7" type="lpit" type_id="lpit_2.0.0" mode="LPIT_GENERAL" peripheral="LPIT0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_lpit">
+                        <struct name="lpitConfig">
+                           <setting name="enableRunInDebug" value="false"/>
+                           <setting name="enableRunInDoze" value="false"/>
+                        </struct>
+                        <struct name="timingConfig">
+                           <setting name="clockSource" value="AsyncPeripheralClock"/>
+                           <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
+                        </struct>
+                        <array name="channels">
+                           <struct name="0">
+                              <setting name="lpitChannelPrefixID" value="Channel_0"/>
+                              <setting name="channelNumber" value="0"/>
+                              <setting name="enableChain" value="false"/>
+                              <setting name="timerMode" value="kLPIT_PeriodicCounter"/>
+                              <setting name="timerPeriod" value="1s"/>
+                              <setting name="lpit_trigger_select_t" value="TRG_CH.0"/>
+                              <setting name="enableReloadOnTriggerBool" value="false"/>
+                              <setting name="enableStopOnTimeout" value="false"/>
+                              <setting name="enableStartOnTriggerBool" value="false"/>
+                              <setting name="startTimer" value="true"/>
+                              <setting name="enableInterrupt" value="false"/>
+                           </struct>
+                        </array>
+                        <setting name="enableSharedInterrupt" value="false"/>
+                        <struct name="sharedInterrupt">
+                           <setting name="IRQn" value="LPIT0_IRQn"/>
+                           <setting name="enable_interrrupt" value="enabled"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
                         </struct>
                      </config_set>
                   </instance>
