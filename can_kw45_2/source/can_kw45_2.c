@@ -21,7 +21,6 @@
 #include "stream_buffer.h"
 #include "peripherals.h"
 #include "fsl_flexcan.h"
-//#include "projdefs.h"
 
 /* TODO: insert other definitions and declarations here. */
 /* LPUART0_IRQn interrupt handler */
@@ -29,6 +28,8 @@ uint8_t uart_rx_char;
 uint8_t counter = 0;
 #define COMMAND_BUFFER_LENGTH 10
 #define RX_BUFFER_LENGTH 64
+
+#define LOGGING
 
 static StreamBufferHandle_t xStreamBuffer0 = NULL;
 static StreamBufferHandle_t xStreamBuffer1 = NULL;
@@ -53,6 +54,25 @@ void delay(uint32_t n) {
 		asm("nop");
 	}
 }
+
+/* LPIT0_IRQn interrupt handler */
+void LPIT0_IRQHANDLER(void) {
+  /*  Place your code here */
+  uint32_t flags = LPIT_GetStatusFlags(LPIT0_PERIPHERAL);
+  LPIT_ClearStatusFlags(LPIT0_PERIPHERAL, flags);
+  LPIT_GetStatusFlags(LPIT0_PERIPHERAL);
+  GPIO_PortToggle(GPIOA, 1u << 19U);
+
+  uint8_t command = 'a';
+  xStreamBufferSend(xStreamBuffer0, &command, 1, portMAX_DELAY);
+
+  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+  #endif
+}
+
 /* LPUART0_IRQn interrupt handler */
 void LPUART0_SERIAL_RX_TX_IRQHANDLER(void) {
 	uint32_t intStatus;
@@ -86,22 +106,27 @@ void can0_callback(CAN_Type *base, flexcan_handle_t *handle, status_t status,
 		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte5, 1, 1000);
 		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte6, 1, 1000);
 		xStreamBufferSend(xStreamBuffer1, &rx_frame_fd->dataByte7, 1, 1000);
+
+//		//This can be used instead of per byte accesses
+//		uint8_t init[8] = {3, 2, 1, 0, 7, 6, 5, 4};
+//		uint8_t * dataBytes = &tx_frame.dataByte3;
+//		for (uint32_t x = 0; x < 8; x++) {
+//			xStreamBufferSend(xStreamBuffer1, &dataBytes[init[x]], 1, 1000);
+//		}
+
 	default:
 		break;
 
 	}
 }
 
-static void CanSenderTask() {
+static void CanSenderReceiverTask() {
 	status_t ret = 0;
-	PRINTF("Hello World\r\n");
 	uint8_t command_char;
 	while (1) {
 		uint8_t transmitted_bytes = xStreamBufferReceive(xStreamBuffer0,
 				&command_char, 1, portMAX_DELAY);
-		PRINTF("Hello World!\r\n");
-		PRINTF("%i, %c, %i, %i received\r\n", counter, command_char,
-				command_char, transmitted_bytes);
+		//PRINTF("%i, %c, %i, %i received\r\n", counter, command_char, command_char, transmitted_bytes);
 
 		for (uint32_t i = 0; i < 8; i++) {
 			tx_frame.id = FLEXCAN_ID_STD(0x123);
@@ -124,7 +149,6 @@ static void CanSenderTask() {
 //				((uint8_t*)&tx_frame.dataByte3)[init[x]] = x + i * 8;
 //			}
 
-
 			tx_mb_frame.mbIdx = (uint8_t) 1;
 			tx_mb_frame.frame = &tx_frame;
 
@@ -132,10 +156,13 @@ static void CanSenderTask() {
 
 			while (!TxComplete) {
 			}
+			#ifdef LOGGING
+				PRINTF("%i Packet Sent \r\n", xTaskGetTickCount());
+			#endif
 			TxComplete = 0;
 
-			//Flexcantr
 		}
+
 		rx_fifo_frame.frame = &rx_frame[0];
 		rx_fifo_frame.framefd = &rx_frame_fd[0];
 		rx_fifo_frame.frameNum = 1;
@@ -145,28 +172,17 @@ static void CanSenderTask() {
 
 			}
 		}
-
 	}
 }
 
-static void CanReceiverTask() {
+static void CanPrintTask() {
 	uint8_t rx_char;
 	while(1){
 		xStreamBufferReceive(xStreamBuffer1, &rx_char, 1, portMAX_DELAY);
-		PRINTF("Received: %i \r\n", rx_char);
+		#ifdef LOGGING
+			PRINTF("Received: %i ", rx_char);
+		#endif
 	}
-}
-
-static void DebugReceiveTask() {
-	while(1){
-		delay(5000000);
-		GPIO_PortToggle(GPIOA, 1u << 19U);
-
-		uint8_t command = 'a';
-		xStreamBufferSend(xStreamBuffer0, &command, 1, portMAX_DELAY);
-	}
-
-
 }
 
 	/*
@@ -193,8 +209,7 @@ static void DebugReceiveTask() {
 
 		FLEXCAN_TransferCreateHandle(CAN0, &flexcan_handle, can0_callback, NULL);
 
-
-		if (xTaskCreate(CanSenderTask, "CanSenderTask",
+		if (xTaskCreate(CanSenderReceiverTask, "CanSenderReceiverTask",
 		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 2,
 				NULL) != pdPASS) {
 			PRINTF("Task creation failed");
@@ -202,16 +217,8 @@ static void DebugReceiveTask() {
 				;
 		}
 
-		if (xTaskCreate(CanReceiverTask, "CanReceiverTask",
+		if (xTaskCreate(CanPrintTask, "CanPrintTask",
 		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 2,
-				NULL) != pdPASS) {
-			PRINTF("Task creation failed");
-			while (1)
-				;
-		}
-
-		if (xTaskCreate(DebugReceiveTask, "DebugReceiveTask",
-		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 1,
 				NULL) != pdPASS) {
 			PRINTF("Task creation failed");
 			while (1)

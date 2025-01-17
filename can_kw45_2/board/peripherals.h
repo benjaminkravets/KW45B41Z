@@ -44,6 +44,10 @@ extern "C" {
 #define LPIT0_CHANNEL_0_TICKS 5999999U
 /* Definition of channel kLPIT_Chnl_0 ID */
 #define LPIT0_CHANNEL_0 kLPIT_Chnl_0
+/* LPIT0 interrupt vector ID (number). */
+#define LPIT0_IRQN LPIT0_IRQn
+/* LPIT0 interrupt handler identifier. */
+#define LPIT0_IRQHANDLER LPIT0_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables

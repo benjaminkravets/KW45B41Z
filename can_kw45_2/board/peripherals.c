@@ -71,6 +71,7 @@ instance:
   - nvic:
     - interrupt_table:
       - 0: []
+      - 1: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -361,13 +362,13 @@ instance:
         - enableChain: 'false'
         - timerMode: 'kLPIT_PeriodicCounter'
         - timerPeriod: '1s'
-        - lpit_trigger_select_t: 'TRG_CH.0'
+        - lpit_trigger_select_t: 'internal_trigger_0'
         - enableReloadOnTriggerBool: 'false'
         - enableStopOnTimeout: 'false'
         - enableStartOnTriggerBool: 'false'
         - startTimer: 'true'
-        - enableInterrupt: 'false'
-    - enableSharedInterrupt: 'false'
+        - enableInterrupt: 'true'
+    - enableSharedInterrupt: 'true'
     - sharedInterrupt:
       - IRQn: 'LPIT0_IRQn'
       - enable_interrrupt: 'enabled'
@@ -379,7 +380,7 @@ instance:
 const lpit_chnl_params_t LPIT0_Channel_0_struct = {
   .chainChannel = false,
   .timerMode = kLPIT_PeriodicCounter,
-  .triggerSource = kLPIT_TriggerSource_External,
+  .triggerSource = kLPIT_TriggerSource_Internal,
   .triggerSelect = kLPIT_Trigger_TimerChn0,
   .enableReloadOnTrigger = false,
   .enableStopOnTimeout = false,
@@ -397,6 +398,10 @@ static void LPIT0_init(void) {
   LPIT_SetupChannel(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0, &LPIT0_Channel_0_struct);
   /* Set channel 0 period to 6000000 ticks. */
   LPIT_SetTimerPeriod(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0, LPIT0_CHANNEL_0_TICKS);
+  /* Enable interrupts from channel Channel_0. */
+  LPIT_EnableInterrupts(LPIT0_PERIPHERAL, kLPIT_Channel0TimerInterruptEnable);
+  /* Enable interrupt LPIT0_IRQN request in the NVIC */
+  EnableIRQ(LPIT0_IRQN);
   /* Start channel 0. */
   LPIT_StartTimer(LPIT0_PERIPHERAL, LPIT0_CHANNEL_0);
 }

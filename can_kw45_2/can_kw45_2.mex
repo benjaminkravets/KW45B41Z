@@ -762,17 +762,13 @@
                         <data type="Frequency" unit="Hz">0</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPIT0.lpit_ext_trig.0" description="Signal TRG_CH.0 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="routed" evaluation="equal">
-                        <data type="Boolean">true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
                <instances>
                   <instance name="NVIC" uuid="8d92e92c-4f0e-459a-a6f0-e3e097b5cb5d" type="nvic" type_id="nvic" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
                         <array name="interrupts"/>
                      </config_set>
@@ -990,15 +986,15 @@
                               <setting name="enableChain" value="false"/>
                               <setting name="timerMode" value="kLPIT_PeriodicCounter"/>
                               <setting name="timerPeriod" value="1s"/>
-                              <setting name="lpit_trigger_select_t" value="TRG_CH.0"/>
+                              <setting name="lpit_trigger_select_t" value="internal_trigger_0"/>
                               <setting name="enableReloadOnTriggerBool" value="false"/>
                               <setting name="enableStopOnTimeout" value="false"/>
                               <setting name="enableStartOnTriggerBool" value="false"/>
                               <setting name="startTimer" value="true"/>
-                              <setting name="enableInterrupt" value="false"/>
+                              <setting name="enableInterrupt" value="true"/>
                            </struct>
                         </array>
-                        <setting name="enableSharedInterrupt" value="false"/>
+                        <setting name="enableSharedInterrupt" value="true"/>
                         <struct name="sharedInterrupt">
                            <setting name="IRQn" value="LPIT0_IRQn"/>
                            <setting name="enable_interrrupt" value="enabled"/>
