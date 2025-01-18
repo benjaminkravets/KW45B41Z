@@ -29,10 +29,10 @@ uint8_t counter = 0;
 #define COMMAND_BUFFER_LENGTH 10
 #define RX_BUFFER_LENGTH 64
 
-#define LOGGING
+//#define LOGGING
 
-static StreamBufferHandle_t xStreamBuffer0 = NULL;
-static StreamBufferHandle_t xStreamBuffer1 = NULL;
+static StreamBufferHandle_t xStreamBuffer0;
+static StreamBufferHandle_t xStreamBuffer1;
 
 
 flexcan_handle_t flexcan_handle;
@@ -195,6 +195,15 @@ static void CanPrintTask() {
 						   FLEXCAN_ENHANCED_RX_FIFO_STD_MASK_AND_FILTER(0x321, 0, 0x3F, 0),
 		};
 		EnRxTableId = (void *)test;
+		//Init streambuffer0 before starting LPIT so that stream buffer is not NULL when used in first handler call (this is not a fix, it just
+		//avoids changing IDE generated peripheral initialization code :). This should by solved by starting LPIT after freertos is running or exiting the
+		//IRQ handler if a "is first call" condition is met.)
+
+		xStreamBuffer0 = xStreamBufferCreate(COMMAND_BUFFER_LENGTH, 1);
+		if (xStreamBuffer0 == NULL) {
+			while (1)
+				;
+		}
 
 		/* Init board hardware. */
 		BOARD_InitBootPins();
@@ -205,10 +214,9 @@ static void CanPrintTask() {
 		BOARD_InitDebugConsole();
 #endif
 		//don't let interrupt priority == 0
-		NVIC_SetPriority(LPUART0_IRQn, 10);
+		NVIC_SetPriority(LPUART0_IRQn, 20);
 
 		FLEXCAN_TransferCreateHandle(CAN0, &flexcan_handle, can0_callback, NULL);
-
 		if (xTaskCreate(CanSenderReceiverTask, "CanSenderReceiverTask",
 		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 2,
 				NULL) != pdPASS) {
@@ -221,12 +229,6 @@ static void CanPrintTask() {
 		configMINIMAL_STACK_SIZE + 200, NULL, tskIDLE_PRIORITY + 2,
 				NULL) != pdPASS) {
 			PRINTF("Task creation failed");
-			while (1)
-				;
-		}
-
-		xStreamBuffer0 = xStreamBufferCreate(COMMAND_BUFFER_LENGTH, 1);
-		if (xStreamBuffer0 == NULL) {
 			while (1)
 				;
 		}
